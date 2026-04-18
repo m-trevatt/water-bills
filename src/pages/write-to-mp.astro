@@ -1,0 +1,208 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="Your MP" currentPath="/write-to-mp" dek="Send a letter about the sector, not just your bill">
+  <h1 class="hed">
+    Your MP is where the bigger question goes.
+    <span class="small">The complaint goes to Southern Water. The policy question goes to Parliament. Your MP is the channel.</span>
+  </h1>
+
+  <p class="lead">
+    Enter your postcode to pull your current MP and their parliamentary email straight from Parliament's own data. Nothing is saved here. If your MP changes, this site reflects it the next time someone loads it.
+  </p>
+
+  <div class="postcode-lookup">
+    <p><strong>Your postcode</strong></p>
+    <div class="row">
+      <input type="text" id="pc-input" placeholder="ME7 2ST" autocomplete="postal-code" spellcheck="false" />
+      <button type="button" class="btn" id="pc-btn">Find my MP</button>
+    </div>
+    <div class="result" id="pc-result" hidden></div>
+    <p class="error" id="pc-error" hidden></p>
+  </div>
+
+  <form class="builder" id="mp-form" autocomplete="on" novalidate>
+    <h2>You</h2>
+    <label for="fullName">Full name</label>
+    <input type="text" id="fullName" name="fullName" autocomplete="name" />
+
+    <h2>The personal bit, optional but it helps</h2>
+    <p style="font-size: 0.9rem; margin-bottom: 0;">
+      MPs triage constituent mail by what looks like a template versus what looks like a person. One or two sentences of your own makes a real difference.
+    </p>
+
+    <div class="row-2">
+      <div>
+        <label for="previousMonthlyBill">Previous monthly bill &pound;</label>
+        <input type="number" id="previousMonthlyBill" name="previousMonthlyBill" step="0.01" min="0" />
+      </div>
+      <div>
+        <label for="currentMonthlyBill">Current monthly bill &pound;</label>
+        <input type="number" id="currentMonthlyBill" name="currentMonthlyBill" step="0.01" min="0" />
+      </div>
+    </div>
+
+    <label for="personalContext">A line or two on how this affects you</label>
+    <textarea id="personalContext" name="personalContext" maxlength="500" placeholder="E.g. I have three children and a fixed income. The rise on water supply alone adds about £72 a year to a budget that was already stretched."></textarea>
+
+    <h2>What you want them to do</h2>
+    <fieldset class="checks">
+      <label><input type="checkbox" name="catchup" checked /> Ensure catch-up investment is funded by shareholders and bondholders, not by customers who cannot switch</label>
+      <label><input type="checkbox" name="transparency" /> Push Ofwat on clearer reporting of internal dividend flows between water companies and their parent holding structures</label>
+      <label><input type="checkbox" name="protection" checked /> Press Ofwat and DEFRA on consumer protection during the 2025-2030 investment period</label>
+      <label><input type="checkbox" name="reform" /> Support reform so household customers have meaningful recourse, given there is no retail market</label>
+      <label><input type="checkbox" name="meeting" /> Let you know when their next constituency surgery is</label>
+    </fieldset>
+  </form>
+
+  <h2>The letter</h2>
+
+  <div class="preview-wrap">
+    <pre class="preview" id="preview" aria-live="polite"></pre>
+  </div>
+
+  <div class="actions">
+    <button type="button" class="btn primary" id="copy-btn">Copy to clipboard</button>
+    <button type="button" class="btn ghost" id="download-btn">Download as .txt</button>
+    <button type="button" class="btn ghost" id="mailto-btn" disabled>Open in email app</button>
+  </div>
+
+  <p class="status" id="status" aria-live="polite"></p>
+
+  <div class="flag" id="mailto-warn" hidden>
+    Your letter is long. Some email apps, Outlook especially, will truncate the body when opened from a link. If the draft looks cut off, use <strong>Copy to clipboard</strong> and paste into a new email instead.
+  </div>
+
+  <h2>A few things worth knowing</h2>
+  <p>
+    MPs only act for their own constituents. That is why the postcode lookup matters: it tells your MP that you are one of theirs.
+  </p>
+  <p>
+    A real letter from one constituent sits on the pile. A hundred letters on the same subject moves it to the top of the pile. This page is not a petition platform and does not count signatures, but if you share it with neighbours, the collective effect is the same.
+  </p>
+
+  <script>
+    import { generateMPLetter } from '../lib/letter-mp.js';
+    import { lookupMPFromPostcode } from '../lib/mp-lookup.js';
+    import { copyToClipboard, downloadAsText, openMailto, MAILTO_BODY_SAFE_LIMIT } from '../lib/delivery.js';
+
+    const form = document.getElementById('mp-form');
+    const preview = document.getElementById('preview');
+    const status = document.getElementById('status');
+    const mailtoBtn = document.getElementById('mailto-btn');
+    const mailtoWarn = document.getElementById('mailto-warn');
+
+    const pcInput = document.getElementById('pc-input');
+    const pcBtn = document.getElementById('pc-btn');
+    const pcResult = document.getElementById('pc-result');
+    const pcError = document.getElementById('pc-error');
+
+    let currentMP = null;
+
+    function showMPResult(mp) {
+      pcResult.hidden = false;
+      pcError.hidden = true;
+      const partyHex = mp.partyColour ? `#${mp.partyColour}` : null;
+      pcResult.innerHTML = `
+        <span class="mp-name">${escapeHtml(mp.fullTitle || mp.name)}</span>
+        <span class="party"${partyHex ? ` style="background:${partyHex}"` : ''}>${escapeHtml(mp.party || '')}</span>
+        ${escapeHtml(mp.constituency || '')}<br>
+        <small style="color:var(--ink-faint); font-family: var(--font-mono); font-size: 0.78rem;">${escapeHtml(mp.email || 'No parliamentary email on file')}</small>
+      `;
+    }
+
+    function showMPError(msg) {
+      pcResult.hidden = true;
+      pcError.hidden = false;
+      pcError.textContent = msg;
+    }
+
+    async function doLookup() {
+      const pc = pcInput.value.trim();
+      if (!pc) { showMPError('Enter a postcode first.'); return; }
+      pcBtn.disabled = true;
+      pcBtn.textContent = 'Looking up…';
+      try {
+        const mp = await lookupMPFromPostcode(pc);
+        currentMP = mp;
+        showMPResult(mp);
+        render();
+      } catch (err) {
+        currentMP = null;
+        showMPError(err.message || 'Lookup failed. Try again in a moment.');
+        render();
+      } finally {
+        pcBtn.disabled = false;
+        pcBtn.textContent = 'Find my MP';
+      }
+    }
+
+    pcBtn.addEventListener('click', doLookup);
+    pcInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); doLookup(); }
+    });
+
+    function read() {
+      const data = new FormData(form);
+      const asks = {};
+      ['catchup', 'transparency', 'protection', 'reform', 'meeting'].forEach(k => {
+        asks[k] = form.querySelector(`[name="${k}"]`)?.checked ?? false;
+      });
+      return {
+        fullName: (data.get('fullName') || '').toString(),
+        postcode: currentMP && currentMP.place ? currentMP.place.postcode : pcInput.value.trim(),
+        mp: currentMP,
+        previousMonthlyBill: (data.get('previousMonthlyBill') || '').toString(),
+        currentMonthlyBill: (data.get('currentMonthlyBill') || '').toString(),
+        personalContext: (data.get('personalContext') || '').toString(),
+        asks
+      };
+    }
+
+    function render() {
+      const letter = generateMPLetter(read());
+      preview.textContent = letter;
+      mailtoBtn.disabled = !(currentMP && currentMP.email);
+      mailtoBtn.title = currentMP && currentMP.email
+        ? `Send to ${currentMP.name}`
+        : 'Enter your postcode first';
+      mailtoWarn.hidden = letter.length <= MAILTO_BODY_SAFE_LIMIT;
+    }
+
+    form.addEventListener('input', render);
+    form.addEventListener('change', render);
+    render();
+
+    function setStatus(msg) {
+      status.textContent = msg;
+      setTimeout(() => { if (status.textContent === msg) status.textContent = ''; }, 4000);
+    }
+
+    document.getElementById('copy-btn').addEventListener('click', async () => {
+      const r = await copyToClipboard(preview.textContent);
+      setStatus(r.ok ? 'Copied.' : 'Copy failed. Select the letter and copy manually.');
+    });
+
+    document.getElementById('download-btn').addEventListener('click', () => {
+      const stamp = new Date().toISOString().slice(0, 10);
+      downloadAsText(preview.textContent, `letter-to-mp-${stamp}.txt`);
+      setStatus('Downloaded.');
+    });
+
+    mailtoBtn.addEventListener('click', () => {
+      if (!currentMP || !currentMP.email) return;
+      openMailto({
+        to: currentMP.email,
+        subject: 'Constituent concern, 2026 water price rise',
+        body: preview.textContent
+      });
+    });
+
+    function escapeHtml(s) {
+      return String(s).replace(/[&<>"']/g, c => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+      }[c]));
+    }
+  </script>
+</Base>

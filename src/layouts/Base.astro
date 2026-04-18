@@ -1,0 +1,98 @@
+---
+import '../styles/global.css';
+
+export interface Props {
+  title: string;
+  dek?: string;
+  description?: string;
+  currentPath?: string;
+}
+
+const {
+  title,
+  dek,
+  description = 'A plain-English explainer of the 2026 Southern Water price rise, for Kent residents. With a complaint builder and a letter to your MP.',
+  currentPath = ''
+} = Astro.props;
+
+const nav = [
+  { href: '/', label: 'The rise', match: '/' },
+  { href: '/complain', label: 'Complain', match: '/complain' },
+  { href: '/write-to-mp', label: 'Your MP', match: '/write-to-mp' },
+  { href: '/sources', label: 'Sources', match: '/sources' }
+];
+
+const today = new Date().toLocaleDateString('en-GB', {
+  day: 'numeric', month: 'long', year: 'numeric'
+});
+---
+
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{title} · Medway Water</title>
+  <meta name="description" content={description} />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="robots" content="index, follow" />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="en_GB" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+</head>
+<body>
+  <header class="masthead">
+    <div class="masthead-inner">
+      <div class="masthead-meta">
+        <span>Medway &middot; Kent</span>
+        <span>{today}</span>
+      </div>
+      <h1 class="masthead-title"><a href="/">Medway Water</a></h1>
+      <nav class="primary" aria-label="Primary">
+        {nav.map(link => (
+          <a href={link.href} aria-current={currentPath === link.match ? 'page' : undefined}>{link.label}</a>
+        ))}
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <slot />
+  </main>
+
+  <footer class="colophon">
+    <div class="colophon-inner">
+      <h3>Nothing stored</h3>
+      <p>
+        Your name, address, bill details, postcode and letter contents live only in your browser. Close the tab and they are gone. No database, no accounts, no email capture, no analytics that identify you.
+      </p>
+
+      <h3>Where the MP data comes from</h3>
+      <p>
+        The MP lookup uses two public services: <a href="https://postcodes.io" rel="noopener noreferrer">Postcodes.io</a> for postcode to constituency, and the official <a href="https://members-api.parliament.uk" rel="noopener noreferrer">UK Parliament Members API</a> for the MP name and parliamentary email. No cached list on this site. If your MP changes tomorrow, this site reflects it tomorrow.
+      </p>
+
+      <h3>Other routes, if this is not what you need</h3>
+      <p>
+        <a href="https://www.ccw.org.uk" rel="noopener noreferrer">Consumer Council for Water</a> handles individual complaints after the water company stage. Free. Statutory.
+        <a href="https://www.watrs.org" rel="noopener noreferrer">WATRS</a> gives binding adjudication after CCW. Free.
+        <a href="https://www.resolver.co.uk" rel="noopener noreferrer">Resolver</a> is a free case-management tool for utility complaints.
+        <a href="https://www.boycottwaterbills.com" rel="noopener noreferrer">Boycott Water Bills</a> is the Kent-based non-payment campaign against sewage pollution. Different remit from this site.
+      </p>
+
+      <h3>Correction?</h3>
+      <p>
+        If a figure is wrong or a link is dead, that matters. Open an issue on the GitHub repo or get in touch via the builder's site. Everything on this page should be traceable to a primary source listed on the <a href="/sources">sources page</a>.
+      </p>
+
+      <p style="margin-top: 1.2rem; font-size: 0.78rem; color: var(--ink-faint);">
+        Built by a Medway resident. Not a campaign. Not affiliated with Southern Water, Ofwat, CCW, or any political party. Verified {today}.
+      </p>
+    </div>
+  </footer>
+</body>
+</html>

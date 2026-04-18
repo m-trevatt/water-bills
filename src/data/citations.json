@@ -1,0 +1,141 @@
+{
+  "_meta": {
+    "last_audit": "2026-04-18",
+    "audit_note": "Each entry has been retrieved and read directly. Where a claim could not be traced to a primary source within one step, it has been removed from the site rather than cited to secondary reporting."
+  },
+  "sw-charges-26-27": {
+    "id": 1,
+    "title": "How we calculate your bill \u2014 2025-26 and 2026-27 charges",
+    "publisher": "Southern Water",
+    "url": "https://www.southernwater.co.uk/help-and-support/how-we-calculate-your-bill/",
+    "accessed": "2026-04-18",
+    "supports": "All tariff figures used on this site. Fetched directly; tables read from page; figures transcribed verbatim.",
+    "type": "primary"
+  },
+  "sw-bills-announcement-26-27": {
+    "id": 2,
+    "title": "Customer bills announcement for 2026/27",
+    "publisher": "Southern Water",
+    "url": "https://www.southernwater.co.uk/latest-news/customer-bills-announcement-for-202627/",
+    "accessed": "2026-04-18",
+    "supports": "The 8 per cent average combined bill rise for 2026/27 and the 46.7 per cent rise in 2025/26.",
+    "type": "primary"
+  },
+  "ofwat-pr24-appeals": {
+    "id": 3,
+    "title": "Competition and Markets Authority references \u2014 2024 Price Review",
+    "publisher": "Ofwat",
+    "url": "https://www.ofwat.gov.uk/regulated-companies/price-review/2024-price-review/competition-and-markets-authority-references/",
+    "accessed": "2026-04-18",
+    "supports": "Regulatory approval of price increases and the appeals by five companies including Southern Water.",
+    "type": "primary"
+  },
+  "cma-pr24-redeterminations": {
+    "id": 4,
+    "title": "Water PR24 price redeterminations",
+    "publisher": "Competition and Markets Authority, GOV.UK",
+    "url": "https://www.gov.uk/cma-cases/water-pr24-price-redeterminations",
+    "accessed": "2026-04-18",
+    "supports": "The CMA final determinations published 26 March 2026 on the disputed PR24 appeals.",
+    "type": "primary"
+  },
+  "ofwat-mfr-2024-25": {
+    "id": 5,
+    "title": "Monitoring Financial Resilience Report 2024-25",
+    "publisher": "Ofwat",
+    "url": "https://www.ofwat.gov.uk/wp-content/uploads/2025/11/The-Monitoring-Financial-Resilience-Report_2024-25.pdf",
+    "accessed": "2026-04-18",
+    "supports": "Sector total borrowings of \u00a382.7 billion at 31 March 2025.",
+    "type": "primary"
+  },
+  "ofwat-mfr-2023-24": {
+    "id": 6,
+    "title": "Monitoring Financial Resilience Report 2023-24",
+    "publisher": "Ofwat",
+    "url": "https://www.ofwat.gov.uk/publication/monitoring-financial-resilience-report-2023-24/",
+    "accessed": "2026-04-18",
+    "supports": "Sector net debt of \u00a369.5 billion at 31 March 2024. Dividend policy licence condition effective 2023-24. Sector dividend yield reduced to 3.5 per cent.",
+    "type": "primary"
+  },
+  "sw-dividend-response": {
+    "id": 7,
+    "title": "Our response to media reports on dividends",
+    "publisher": "Southern Water",
+    "url": "https://www.southernwater.co.uk/latest-news/our-response-to-media-reports-on-dividends/",
+    "accessed": "2026-04-18",
+    "supports": "Southern Water's own statement that no external dividends have been paid since 2017 and that Macquarie has injected more than \u00a31.6 billion of equity since 2021.",
+    "type": "primary"
+  },
+  "ofwat-mfr-2022-23-southern-equity": {
+    "id": 8,
+    "title": "Monitoring Financial Resilience Report 2022-23 \u2014 Southern Water equity injection detail",
+    "publisher": "Ofwat",
+    "url": "https://www.ofwat.gov.uk/publication/monitoring-financial-resilience-report-2022-23/",
+    "accessed": "2026-04-18",
+    "supports": "\u00a3550 million further equity injected into the Southern Water Group in October 2023, of which \u00a3375 million received by the regulated entity. \u00a31.1 billion equity injection in September 2021 by Macquarie-managed funds, of which \u00a3530 million received by the regulated entity.",
+    "type": "primary"
+  },
+  "ccw": {
+    "id": 9,
+    "title": "Consumer Council for Water",
+    "publisher": "CCW",
+    "url": "https://www.ccw.org.uk",
+    "accessed": "2026-04-18",
+    "supports": "The statutory independent body for water customer complaints in England and Wales. Free.",
+    "type": "primary"
+  },
+  "watrs": {
+    "id": 10,
+    "title": "Water Redress Scheme",
+    "publisher": "WATRS",
+    "url": "https://www.watrs.org",
+    "accessed": "2026-04-18",
+    "supports": "Independent binding adjudication for unresolved water disputes, accessed via CCW.",
+    "type": "primary"
+  },
+  "sw-complaints": {
+    "id": 11,
+    "title": "Our complaints procedure",
+    "publisher": "Southern Water",
+    "url": "https://www.southernwater.co.uk/contact-us/our-complaints-procedure/",
+    "accessed": "2026-04-18",
+    "supports": "Southern Water's published stage 1 complaints process.",
+    "type": "primary"
+  },
+  "sw-financial-support": {
+    "id": 12,
+    "title": "What if I can't pay my bill?",
+    "publisher": "Southern Water",
+    "url": "https://www.southernwater.co.uk/help-and-support/what-if-i-cant-pay-my-bill/",
+    "accessed": "2026-04-18",
+    "supports": "Social tariff offering discounts of at least 45 per cent for eligible customers; Hardship Fund grants and debt write-off.",
+    "type": "primary"
+  },
+  "parliament-find-mp": {
+    "id": 13,
+    "title": "Find your MP",
+    "publisher": "UK Parliament",
+    "url": "https://members.parliament.uk/FindYourMP",
+    "accessed": "2026-04-18",
+    "supports": "Canonical source for MP details, used via the Members API.",
+    "type": "primary"
+  },
+  "water-uk-supplier-finder": {
+    "id": 14,
+    "title": "Find your supplier",
+    "publisher": "Water UK",
+    "url": "https://www.water.org.uk/customers/find-your-supplier",
+    "accessed": "2026-04-18",
+    "supports": "Official postcode-based lookup of water supplier. Used as the fallback for users whose bill is not to hand.",
+    "type": "primary"
+  },
+  "boycott-water-bills": {
+    "id": 15,
+    "title": "Boycott Water Bills",
+    "publisher": "Sick of Sewage / Julie Wassmer, Katy Colley",
+    "url": "https://www.boycottwaterbills.com",
+    "accessed": "2026-04-18",
+    "supports": "Existing Kent and Sussex campaign advocating non-payment of the wastewater portion in protest at sewage pollution. Different remit from this site.",
+    "type": "secondary"
+  }
+}

@@ -1,0 +1,51 @@
+---
+import Base from '../layouts/Base.astro';
+import citations from '../data/citations.json';
+
+const items = Object.entries(citations)
+  .filter(([k]) => k !== '_meta')
+  .map(([key, c]) => ({ key, ...c }))
+  .sort((a, b) => a.id - b.id);
+
+const auditDate = citations._meta.last_audit;
+---
+
+<Base title="Sources" currentPath="/sources" dek="Every claim, traced">
+  <h1 class="hed">Sources.<span class="small">One per claim. Primary where possible.</span></h1>
+
+  <p class="lead">
+    Last audited {auditDate}. If a link is dead or a figure is stale, flag it and it gets fixed.
+  </p>
+
+  <p>
+    {citations._meta.audit_note}
+  </p>
+
+  <ol class="sources-list">
+    {items.map(c => (
+      <li id={String(c.id)}>
+        <div class="num-col">{c.id}</div>
+        <div>
+          <div class="title">{c.title}</div>
+          <div class="pub">{c.publisher}</div>
+          <a class="url" href={c.url} rel="noopener noreferrer">{c.url}</a>
+          <div class="supports">{c.supports}</div>
+          <div class="accessed">Accessed {c.accessed} &middot; {c.type}</div>
+        </div>
+      </li>
+    ))}
+  </ol>
+
+  <h2>What is deliberately not here</h2>
+  <p>
+    No claim that Southern Water has committed fraud. No accusation against any named person. No citation of figures that could not be traced to a primary document within one step.
+  </p>
+  <p>
+    There are stronger arguments available to someone who is willing to rely on secondary reporting. Boycott Water Bills uses them. This site does not, because its value rests on being unchallengeable on the facts.
+  </p>
+
+  <h2>Refresh cadence</h2>
+  <p>
+    Water company rates change on 1 April each year. MPs change at general elections and by-elections, but the MP lookup on this site is live against Parliament's own API, so no editing is needed there. Everything else is audited quarterly.
+  </p>
+</Base>

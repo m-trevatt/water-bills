@@ -1,0 +1,27 @@
+{
+  "_meta": {
+    "fetched": "2026-04-18",
+    "note": "Every figure here comes from an Ofwat Monitoring Financial Resilience Report or Southern Water official statement. No secondary reporting. Figures included only if the underlying document is linked in citations.json."
+  },
+  "sector": {
+    "total_borrowing_31_march_2025_gbp_bn": 82.7,
+    "total_borrowing_source": "ofwat-mfr-2024-25",
+    "net_debt_31_march_2024_gbp_bn": 69.5,
+    "net_debt_source": "ofwat-mfr-2023-24",
+    "dividends_declared_2023_24_gbp_bn": 1.0,
+    "dividends_declared_source": "ofwat-mfr-2023-24",
+    "sector_dividend_yield_2023_24_pct": 3.5,
+    "sector_dividend_yield_source": "ofwat-mfr-2023-24"
+  },
+  "southern_water": {
+    "external_dividends_since_2017": 0,
+    "external_dividends_source": "sw-dividend-response",
+    "macquarie_equity_sept_2021_group_gbp_bn": 1.1,
+    "macquarie_equity_sept_2021_regulated_gbp_m": 530,
+    "macquarie_equity_oct_2023_group_gbp_m": 550,
+    "macquarie_equity_oct_2023_regulated_gbp_m": 375,
+    "equity_source": "ofwat-mfr-2022-23-southern-equity",
+    "total_equity_since_2021_gbp_bn_plus": 1.6,
+    "total_equity_source": "sw-dividend-response"
+  }
+}
