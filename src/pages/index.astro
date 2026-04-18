@@ -29,19 +29,15 @@ const compoundCombined = combinedCompoundPct.toFixed(1);
 const compoundWaterOnly = waterOnlyCompoundPct.toFixed(1);
 ---
 
-<Base title="The rise" currentPath="/" dek="The two-year compound rise on your Southern Water bill">
+<Base title="Overview" currentPath="/" dek="The two-year compound rise on your Southern Water bill">
   <h1 class="hed">
-    Over two years, the typical combined household bill has risen by about {compoundCombined} per cent. Water-supply-only customers are nearer {compoundWaterOnly} per cent.
-    <span class="small">Southern Water's current-year headline is eight per cent. That is one year, averaged across three customer types. The compound figure is what lands on the doormat.</span>
+    From April 2025 to April 2026, our water bills have risen by roughly {compoundCombined}%.
+    <span class="small">Southern Water's current-year headline is eight per cent. What is going on?</span>
   </h1>
-
-  <p class="lead">
-    Every figure below is from a primary source. Numbers in brackets link to the <a href="/sources">sources page</a>.
-  </p>
 
   <aside class="action-panel" aria-label="What you can do">
     <p class="action-panel-lede">
-      <strong>If you want to act now.</strong> You can do two things from this page. Both take a few minutes. Neither requires an account.
+      <strong>Take action now.</strong>
     </p>
     <div class="actions">
       <a class="btn primary" href="/complain">Draft a complaint to Southern Water</a>
@@ -52,7 +48,7 @@ const compoundWaterOnly = waterOnlyCompoundPct.toFixed(1);
     </p>
   </aside>
 
-  <h2>The two-year picture</h2>
+  <h2>What's happened</h2>
 
   <p>
     In April 2025, the average combined household bill went up by {prev.combined_average_rise_pct} per cent<a class="cite" href="/sources#2" aria-label="Source 2">2</a>. In April 2026, a further {H.combined_average_rise_pct} per cent was added on top<a class="cite" href="/sources#2" aria-label="Source 2">2</a>. Rises compound. A bill that was £100 in March 2025 is about £{((1 + prev.combined_average_rise_pct/100) * (1 + H.combined_average_rise_pct/100) * 100).toFixed(0)} now.
@@ -98,20 +94,6 @@ const compoundWaterOnly = waterOnlyCompoundPct.toFixed(1);
     </tbody>
   </table>
 
-  <h2>Where the money went</h2>
-
-  <p>
-    Ofwat's Monitoring Financial Resilience Report for 2022-23 records two equity injections into the Southern Water group from funds managed by Macquarie Asset Management. £1.1 billion was injected in September 2021, of which £530 million reached the regulated entity that actually supplies your water. A further £550 million was injected in October 2023, of which £375 million reached the regulated entity.<a class="cite" href="/sources#8" aria-label="Source 8">8</a>
-  </p>
-
-  <p>
-    £1.65 billion went in at the top of the group. About £905 million reached the operating company. The difference, roughly £745 million, stayed at the parent level.
-  </p>
-
-  <p>
-    Ofwat's own position, in the same report, is that "it is not sufficient for companies to justify their dividend payments on the basis of meeting holding company obligations, and without also considering performance of the regulatory company to support that dividend decision."<a class="cite" href="/sources#8" aria-label="Source 8">8</a> The regulator has since strengthened the dividend-policy licence condition.
-  </p>
-
   <h2>Who approved the rise</h2>
 
   <p>
@@ -124,6 +106,20 @@ const compoundWaterOnly = waterOnlyCompoundPct.toFixed(1);
 
   <p>
     Household customers cannot appeal Ofwat's decision directly. Ofwat does not handle individual bill complaints. There is no retail market: you cannot switch supplier.
+  </p>
+
+  <h2>Where the money went</h2>
+
+  <p>
+    Ofwat's Monitoring Financial Resilience Report for 2022-23 records two equity injections into the Southern Water group from funds managed by Macquarie Asset Management. £1.1 billion was injected in September 2021, of which £530 million reached the regulated entity that actually supplies your water. A further £550 million was injected in October 2023, of which £375 million reached the regulated entity.<a class="cite" href="/sources#8" aria-label="Source 8">8</a>
+  </p>
+
+  <p>
+    £1.65 billion went in at the top of the group. About £905 million reached the operating company. The difference, roughly £745 million, stayed at the parent level.
+  </p>
+
+  <p>
+    Ofwat's own position, in the same report, is that "it is not sufficient for companies to justify their dividend payments on the basis of meeting holding company obligations, and without also considering performance of the regulatory company to support that dividend decision."<a class="cite" href="/sources#8" aria-label="Source 8">8</a> The regulator has since strengthened the dividend-policy licence condition.
   </p>
 
   <h2>Why 8 per cent and 28 per cent both appear</h2>
@@ -168,6 +164,6 @@ const compoundWaterOnly = waterOnlyCompoundPct.toFixed(1);
   </div>
 
   <div class="flag">
-    <strong>This site is not a campaign.</strong> It does not tell you what to conclude and does not suggest you stop paying. Non-payment has real consequences for your credit rating and is not recommended without advice.
+    <strong>This site is not a campaign and is not party affiliated.</strong> It was built by a local who doesn't think this is fair. It does not offer legal advice.
   </div>
 </Base>
