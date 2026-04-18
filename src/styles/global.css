@@ -277,6 +277,34 @@ a:hover { color: var(--accent); }
   border-radius: 2px;
 }
 .cite:hover { background: var(--accent); color: var(--paper); }
+.cite:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+/* ---- Action panel (home-page call to action above the fold) ---- */
+
+.action-panel {
+  border: 1.5px solid var(--ink);
+  background: var(--paper-card);
+  padding: 1.1rem 1.2rem 1.2rem;
+  margin: 1.25rem 0 2rem;
+}
+.action-panel-lede {
+  margin: 0 0 0.9rem;
+  font-size: 1rem;
+  line-height: 1.45;
+  color: var(--ink);
+}
+.action-panel-lede strong {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.005em;
+}
+.action-panel .actions { margin: 0 0 0.8rem; }
+.action-panel-note {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  line-height: 1.45;
+}
 
 /* ---- Figure-table ---- */
 
