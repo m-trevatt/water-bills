@@ -156,7 +156,8 @@ import Base from '../layouts/Base.astro';
         previousMonthlyBill: (data.get('previousMonthlyBill') || '').toString(),
         currentMonthlyBill: (data.get('currentMonthlyBill') || '').toString(),
         personalContext: (data.get('personalContext') || '').toString(),
-        asks
+        asks,
+        siteOrigin: typeof window !== 'undefined' ? window.location.origin : ''
       };
     }
 

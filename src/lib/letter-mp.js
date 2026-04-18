@@ -29,7 +29,8 @@ export function generateMPLetter(input) {
     previousMonthlyBill = '',
     currentMonthlyBill = '',
     personalContext = '',
-    asks = {}
+    asks = {},
+    siteOrigin = ''
   } = input;
 
   const today = new Date().toLocaleDateString('en-GB', {
@@ -89,7 +90,7 @@ ${impact}I am not asking you to say the rise is unlawful. Ofwat approved it in t
 
 My question is different. It is a question about fairness.
 
-Across the water sector, Ofwat's most recent Monitoring Financial Resilience Report records total borrowings of £82.7 billion at 31 March 2025. Net debt was £69.5 billion the year before. Southern Water states that no dividends have gone to external shareholders since 2017, and that Macquarie has injected more than £1.6 billion of equity since 2021. That is true. It is also true that before 2017, shareholders did extract substantial returns, and that customers today are being asked to fund catch-up investment through steep annual rises with no option to switch supplier, because household water in England is a regional monopoly.
+Across the water sector, Ofwat's most recent Monitoring Financial Resilience Report records total borrowings of £82.7 billion at 31 March 2025. Net debt was £69.5 billion the year before. Southern Water states that no dividends have gone to external shareholders since 2017, and that Macquarie has injected more than £1.6 billion of equity since 2021. Both of those statements check out against Ofwat's own reporting. What customers are being asked to do now is fund catch-up investment through steep annual rises with no option to switch supplier, because household water in England is a regional monopoly.
 
 ${context}This is a cross-party issue. A constituent of any political view can look at those numbers and reasonably ask whether a lawful system is also a fair one.
 
@@ -108,6 +109,6 @@ Figures used in this letter:
 - 46.7 per cent previous year rise: Southern Water customer bills announcement for 2026/27
 - £82.7bn / £69.5bn sector totals: Ofwat Monitoring Financial Resilience Reports 2024-25 and 2023-24
 - Macquarie equity: Southern Water dividend statement, cross-referenced with Ofwat MFR 2022-23
-Full sources: https://medway-water.pages.dev/sources
+Full sources: ${siteOrigin || ''}/sources
 `;
 }
