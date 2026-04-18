@@ -28,18 +28,18 @@ import Base from '../layouts/Base.astro';
     <strong>This complaint letter is written for Southern Water.</strong> If your supplier is different, the figures on the letter will be wrong. Use your own supplier's published charges scheme and adjust. The <a href="/write-to-mp">letter to your MP</a> is supplier-agnostic and works for you either way.
   </div>
 
-  <form class="builder" id="complaint-form" autocomplete="on" novalidate>
+  <form class="builder" id="complaint-form" autocomplete="on">
     <h2>Who you are</h2>
-    <label for="fullName">Full name</label>
-    <input type="text" id="fullName" name="fullName" autocomplete="name" />
+    <label for="fullName">Full name <span class="req" aria-hidden="true">*</span></label>
+    <input type="text" id="fullName" name="fullName" autocomplete="name" required aria-required="true" />
 
-    <label for="address">Address</label>
-    <input type="text" id="address" name="address" autocomplete="street-address" placeholder="Number, street, town" />
+    <label for="address">Address <span class="req" aria-hidden="true">*</span></label>
+    <input type="text" id="address" name="address" autocomplete="street-address" placeholder="Number, street, town" required aria-required="true" />
 
-    <label for="postcode">Postcode</label>
-    <input type="text" id="postcode" name="postcode" autocomplete="postal-code" placeholder="ME7 2ST" />
+    <label for="postcode">Postcode <span class="req" aria-hidden="true">*</span></label>
+    <input type="text" id="postcode" name="postcode" autocomplete="postal-code" placeholder="ME7 2ST" required aria-required="true" />
 
-    <label for="accountNumber">Account number, if you have it</label>
+    <label for="accountNumber">Account number <span class="hint-inline">(optional)</span></label>
     <input type="text" id="accountNumber" name="accountNumber" placeholder="Leave blank if unsure" />
 
     <h2>The bill</h2>
@@ -77,7 +77,7 @@ import Base from '../layouts/Base.astro';
   <h2>The letter</h2>
 
   <div class="preview-wrap">
-    <pre class="preview" id="preview" aria-live="polite"></pre>
+    <pre class="preview" id="preview" aria-live="polite">Fill in the form above. The letter will draft itself as you type.</pre>
   </div>
 
   <div class="actions">
@@ -149,9 +149,9 @@ import Base from '../layouts/Base.astro';
       mailtoWarn.hidden = letter.length <= MAILTO_BODY_SAFE_LIMIT;
     }
 
-    form.addEventListener('input', render);
-    form.addEventListener('change', render);
-    render();
+    let userTouched = false;
+    form.addEventListener('input', () => { userTouched = true; render(); });
+    form.addEventListener('change', () => { userTouched = true; render(); });
 
     function setStatus(msg) {
       status.textContent = msg;

@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import citations from '../data/citations.json';
 
 export interface Props {
   title: string;
@@ -10,10 +11,13 @@ export interface Props {
 
 const {
   title,
-  dek,
   description = 'A plain-English explainer of the 2026 Southern Water price rise, for Kent residents. With a complaint builder and a letter to your MP.',
   currentPath = ''
 } = Astro.props;
+
+const auditDate = new Date(citations._meta.last_audit).toLocaleDateString('en-GB', {
+  day: 'numeric', month: 'long', year: 'numeric'
+});
 
 const nav = [
   { href: '/', label: 'The rise', match: '/' },
@@ -45,13 +49,14 @@ const today = new Date().toLocaleDateString('en-GB', {
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 </head>
 <body>
+  <a class="skip-link" href="#main">Skip to content</a>
   <header class="masthead">
     <div class="masthead-inner">
       <div class="masthead-meta">
         <span>Medway &middot; Kent</span>
         <span>{today}</span>
       </div>
-      <h1 class="masthead-title"><a href="/">Medway Water</a></h1>
+      <p class="masthead-title"><a href="/">Medway Water</a></p>
       <nav class="primary" aria-label="Primary">
         {nav.map(link => (
           <a href={link.href} aria-current={currentPath === link.match ? 'page' : undefined}>{link.label}</a>
@@ -60,7 +65,7 @@ const today = new Date().toLocaleDateString('en-GB', {
     </div>
   </header>
 
-  <main>
+  <main id="main">
     <slot />
   </main>
 
@@ -88,7 +93,7 @@ const today = new Date().toLocaleDateString('en-GB', {
       </p>
 
       <p style="margin-top: 1.2rem; font-size: 0.78rem; color: var(--ink-faint);">
-        Built by a Medway resident. Not a campaign. Not affiliated with Southern Water, Ofwat, CCW, or any political party. Verified {today}.
+        Built by a Medway resident. Not a campaign. Not affiliated with Southern Water, Ofwat, CCW, or any political party. Sources last audited {auditDate}.
       </p>
     </div>
   </footer>

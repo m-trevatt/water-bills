@@ -13,13 +13,13 @@ import Base from '../layouts/Base.astro';
   </p>
 
   <div class="postcode-lookup">
-    <p><strong>Your postcode</strong></p>
+    <label for="pc-input">Your postcode</label>
     <div class="row">
-      <input type="text" id="pc-input" placeholder="ME7 2ST" autocomplete="postal-code" spellcheck="false" />
+      <input type="text" id="pc-input" placeholder="ME7 2ST" autocomplete="postal-code" spellcheck="false" aria-describedby="pc-error" />
       <button type="button" class="btn" id="pc-btn">Find my MP</button>
     </div>
-    <div class="result" id="pc-result" hidden></div>
-    <p class="error" id="pc-error" hidden></p>
+    <div class="result" id="pc-result" aria-live="polite" hidden></div>
+    <p class="error" id="pc-error" role="alert" hidden></p>
   </div>
 
   <form class="builder" id="mp-form" autocomplete="on" novalidate>
@@ -28,7 +28,7 @@ import Base from '../layouts/Base.astro';
     <input type="text" id="fullName" name="fullName" autocomplete="name" />
 
     <h2>The personal bit, optional but it helps</h2>
-    <p style="font-size: 0.9rem; margin-bottom: 0;">
+    <p class="hint">
       MPs triage constituent mail by what looks like a template versus what looks like a person. One or two sentences of your own makes a real difference.
     </p>
 
@@ -48,10 +48,10 @@ import Base from '../layouts/Base.astro';
 
     <h2>What you want them to do</h2>
     <fieldset class="checks">
-      <label><input type="checkbox" name="catchup" checked /> Ensure catch-up investment is funded by shareholders and bondholders, not by customers who cannot switch</label>
-      <label><input type="checkbox" name="transparency" /> Push Ofwat on clearer reporting of internal dividend flows between water companies and their parent holding structures</label>
-      <label><input type="checkbox" name="protection" checked /> Press Ofwat and DEFRA on consumer protection during the 2025-2030 investment period</label>
-      <label><input type="checkbox" name="reform" /> Support reform so household customers have meaningful recourse, given there is no retail market</label>
+      <label><input type="checkbox" name="catchup" checked /> Make shareholders and lenders &mdash; not customers who cannot switch &mdash; pay for the catch-up investment in pipes and sewage works</label>
+      <label><input type="checkbox" name="transparency" /> Push Ofwat to publish clearer figures on the money that moves between water companies and their parent owners</label>
+      <label><input type="checkbox" name="protection" checked /> Ask Ofwat and DEFRA what will happen to bills if service does not improve in line with the extra money</label>
+      <label><input type="checkbox" name="reform" /> Support reform that gives customers a real way to push back, since we cannot change supplier</label>
       <label><input type="checkbox" name="meeting" /> Let you know when their next constituency surgery is</label>
     </fieldset>
   </form>
@@ -62,10 +62,11 @@ import Base from '../layouts/Base.astro';
     <pre class="preview" id="preview" aria-live="polite"></pre>
   </div>
 
+  <p class="mailto-hint" id="mailto-hint">Find your MP first to enable "Open in email app".</p>
   <div class="actions">
     <button type="button" class="btn primary" id="copy-btn">Copy to clipboard</button>
     <button type="button" class="btn ghost" id="download-btn">Download as .txt</button>
-    <button type="button" class="btn ghost" id="mailto-btn" disabled>Open in email app</button>
+    <button type="button" class="btn ghost" id="mailto-btn" disabled aria-describedby="mailto-hint">Open in email app</button>
   </div>
 
   <p class="status" id="status" aria-live="polite"></p>
@@ -108,7 +109,7 @@ import Base from '../layouts/Base.astro';
         <span class="mp-name">${escapeHtml(mp.fullTitle || mp.name)}</span>
         <span class="party"${partyHex ? ` style="background:${partyHex}"` : ''}>${escapeHtml(mp.party || '')}</span>
         ${escapeHtml(mp.constituency || '')}<br>
-        <small style="color:var(--ink-faint); font-family: var(--font-mono); font-size: 0.78rem;">${escapeHtml(mp.email || 'No parliamentary email on file')}</small>
+        <small class="mp-email">${escapeHtml(mp.email || 'No parliamentary email on file')}</small>
       `;
     }
 
@@ -120,9 +121,15 @@ import Base from '../layouts/Base.astro';
 
     async function doLookup() {
       const pc = pcInput.value.trim();
-      if (!pc) { showMPError('Enter a postcode first.'); return; }
+      if (!pc) {
+        pcInput.setAttribute('aria-invalid', 'true');
+        showMPError('Enter a postcode first.');
+        return;
+      }
+      pcInput.removeAttribute('aria-invalid');
       pcBtn.disabled = true;
       pcBtn.textContent = 'Looking up…';
+      pcResult.setAttribute('aria-busy', 'true');
       try {
         const mp = await lookupMPFromPostcode(pc);
         currentMP = mp;
@@ -135,6 +142,7 @@ import Base from '../layouts/Base.astro';
       } finally {
         pcBtn.disabled = false;
         pcBtn.textContent = 'Find my MP';
+        pcResult.removeAttribute('aria-busy');
       }
     }
 
@@ -161,13 +169,14 @@ import Base from '../layouts/Base.astro';
       };
     }
 
+    const mailtoHint = document.getElementById('mailto-hint');
     function render() {
       const letter = generateMPLetter(read());
       preview.textContent = letter;
-      mailtoBtn.disabled = !(currentMP && currentMP.email);
-      mailtoBtn.title = currentMP && currentMP.email
-        ? `Send to ${currentMP.name}`
-        : 'Enter your postcode first';
+      const hasMp = !!(currentMP && currentMP.email);
+      mailtoBtn.disabled = !hasMp;
+      mailtoBtn.title = hasMp ? `Send to ${currentMP.name}` : 'Find your MP first';
+      if (mailtoHint) mailtoHint.hidden = hasMp;
       mailtoWarn.hidden = letter.length <= MAILTO_BODY_SAFE_LIMIT;
     }
 

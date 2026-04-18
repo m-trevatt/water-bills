@@ -7,7 +7,7 @@
 :root {
   --ink: #1a1614;
   --ink-soft: #5a524c;
-  --ink-faint: #8e847c;
+  --ink-faint: #6e655c;
   --paper: #f6f1e9;
   --paper-warm: #efe7d9;
   --paper-card: #fcf8f1;
@@ -51,6 +51,41 @@
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
+
+.skip-link {
+  position: absolute;
+  left: 0.5rem;
+  top: -3rem;
+  background: var(--ink);
+  color: var(--paper);
+  padding: 0.6rem 0.9rem;
+  font-family: var(--font-body);
+  font-weight: 600;
+  text-decoration: none;
+  z-index: 100;
+  transition: top 0.15s;
+}
+.skip-link:focus { top: 0.5rem; outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.visually-hidden {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+button.btn:focus-visible, a.btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+nav.primary a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
 
 html {
   -webkit-text-size-adjust: 100%;
@@ -520,8 +555,13 @@ fieldset {
   padding: 1.1rem 0 1rem;
   border-bottom: 1px solid var(--rule);
   display: grid;
-  grid-template-columns: 2rem 1fr;
+  grid-template-columns: 2.3rem 1fr;
   gap: 0.2rem 0.8rem;
+}
+.sources-list > li:target {
+  background: var(--flag-bg);
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
 }
 .sources-list .num-col {
   font-family: var(--font-mono);
@@ -612,9 +652,10 @@ footer.colophon {
   appearance: none;
   border: 1px solid var(--rule-hard);
   background: transparent;
-  padding: 0.35rem 0.7rem;
+  padding: 0.55rem 0.9rem;
+  min-height: 2.5rem;
   font-family: var(--font-body);
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   color: var(--ink);
   cursor: pointer;
   border-radius: 0;
@@ -628,6 +669,48 @@ footer.colophon {
   font-size: 0.8rem;
   color: var(--ink-faint);
   line-height: 1.4;
+}
+
+/* ---- Inline hints ---- */
+
+.hint, .mailto-hint {
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  margin: 0.25rem 0 1rem;
+}
+.mailto-hint { margin: 0.75rem 0 0.5rem; }
+.hint-inline {
+  text-transform: none;
+  font-weight: 400;
+  letter-spacing: 0;
+  color: var(--ink-soft);
+  font-size: 0.78rem;
+}
+.req {
+  color: var(--accent);
+  font-weight: 700;
+  margin-left: 0.15rem;
+}
+.postcode-lookup label {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0 0 0.4rem;
+}
+.mp-email {
+  display: block;
+  margin-top: 0.25rem;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+}
+input[aria-invalid="true"] {
+  border-color: var(--accent);
+  outline: 2px solid var(--accent);
+  outline-offset: -1px;
 }
 
 /* ---- Status line ---- */
