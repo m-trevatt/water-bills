@@ -22,12 +22,17 @@ const rows = [
 
 const waterM3Delta = pct(R25.water_supply_per_cubic_metre_gbp, R26.water_supply_per_cubic_metre_gbp);
 const waterStandingDelta = pct(R25.water_supply_standing_gbp, R26.water_supply_standing_gbp);
+
+const combinedCompoundPct = (((1 + prev.combined_average_rise_pct / 100) * (1 + H.combined_average_rise_pct / 100)) - 1) * 100;
+const waterOnlyCompoundPct = (((1 + prev.combined_average_rise_pct / 100) * (1 + H.water_supply_only_rise_pct / 100)) - 1) * 100;
+const compoundCombined = combinedCompoundPct.toFixed(1);
+const compoundWaterOnly = waterOnlyCompoundPct.toFixed(1);
 ---
 
-<Base title="The rise" currentPath="/" dek="What happened to your 2026 Southern Water bill">
+<Base title="The rise" currentPath="/" dek="The two-year compound rise on your Southern Water bill">
   <h1 class="hed">
-    Your water supply rate went up by more than a quarter this April.
-    <span class="small">The company's headline is eight per cent. Both numbers are real. The difference is in what they measure.</span>
+    Over two years, the typical combined household bill has risen by about {compoundCombined} per cent. Water-supply-only customers are nearer {compoundWaterOnly} per cent.
+    <span class="small">Southern Water's current-year headline is eight per cent. That is one year, averaged across three customer types. The compound figure is what lands on the doormat.</span>
   </h1>
 
   <p class="lead">
@@ -46,6 +51,20 @@ const waterStandingDelta = pct(R25.water_supply_standing_gbp, R26.water_supply_s
       If you are struggling to pay, Southern Water's social tariff gives at least a 45 per cent discount for eligible households.<a class="cite" href="/sources#12" aria-label="Source 12">12</a>
     </p>
   </aside>
+
+  <h2>The two-year picture</h2>
+
+  <p>
+    In April 2025, the average combined household bill went up by {prev.combined_average_rise_pct} per cent<a class="cite" href="/sources#2" aria-label="Source 2">2</a>. In April 2026, a further {H.combined_average_rise_pct} per cent was added on top<a class="cite" href="/sources#2" aria-label="Source 2">2</a>. Rises compound. A bill that was £100 in March 2025 is about £{((1 + prev.combined_average_rise_pct/100) * (1 + H.combined_average_rise_pct/100) * 100).toFixed(0)} now.
+  </p>
+
+  <p>
+    For households that only take water supply from Southern Water, the two-year compound is steeper still: {prev.combined_average_rise_pct} per cent followed by {H.water_supply_only_rise_pct} per cent, which is about {compoundWaterOnly} per cent over two years<a class="cite" href="/sources#2" aria-label="Source 2">2</a>. Per cubic metre, the water-supply rate alone went up by {waterM3Delta} per cent this April<a class="cite" href="/sources#1" aria-label="Source 1">1</a>. The standing charge went up by {waterStandingDelta} per cent<a class="cite" href="/sources#1" aria-label="Source 1">1</a>.
+  </p>
+
+  <p class="callout">
+    The 2025 rise was described at the time as front-loaded, to pay for investment.<a class="cite" href="/sources#2" aria-label="Source 2">2</a> The 2026 rise is additional.
+  </p>
 
   <h2>The new rates, set against last year</h2>
 
@@ -79,27 +98,21 @@ const waterStandingDelta = pct(R25.water_supply_standing_gbp, R26.water_supply_s
     </tbody>
   </table>
 
-  <h2>Why the 8 per cent and the 28 per cent both exist</h2>
+  <h2>Where the money went</h2>
 
   <p>
-    Southern Water says the average combined household bill is going up by {H.combined_average_rise_pct} per cent<a class="cite" href="/sources#2" aria-label="Source 2">2</a>. That is an average across three types of customer:
+    Ofwat's Monitoring Financial Resilience Report for 2022-23 records two equity injections into the Southern Water group from funds managed by Macquarie Asset Management. £1.1 billion was injected in September 2021, of which £530 million reached the regulated entity that actually supplies your water. A further £550 million was injected in October 2023, of which £375 million reached the regulated entity.<a class="cite" href="/sources#8" aria-label="Source 8">8</a>
   </p>
-
-  <ul>
-    <li>Combined water and wastewater: about {sign(H.combined_average_rise_pct)}, or {fmt(H.combined_average_monthly_rise_gbp)} a month<a class="cite" href="/sources#2" aria-label="Source 2">2</a></li>
-    <li>Water supply only: {sign(H.water_supply_only_rise_pct)}, or {fmt(H.water_supply_only_monthly_rise_gbp)} a month<a class="cite" href="/sources#2" aria-label="Source 2">2</a></li>
-    <li>Wastewater only: {sign(H.wastewater_only_rise_pct)}, a saving of about {fmt(H.wastewater_only_monthly_saving_gbp)} a month<a class="cite" href="/sources#2" aria-label="Source 2">2</a></li>
-  </ul>
 
   <p>
-    Per cubic metre of water supply, the rate is up by {waterM3Delta} per cent<a class="cite" href="/sources#1" aria-label="Source 1">1</a>. The standing charge is up by {waterStandingDelta} per cent<a class="cite" href="/sources#1" aria-label="Source 1">1</a>. Whether your personal bill shows a rise of 8 per cent or nearer 28 per cent depends on which services you get, how much water you use, and whether the billing period crosses 1 April.
+    £1.65 billion went in at the top of the group. About £905 million reached the operating company. The difference, roughly £745 million, stayed at the parent level.
   </p>
 
-  <p class="callout">
-    This comes a year after a {prev.combined_average_rise_pct} per cent average household rise. That one was front-loaded to pay for investment, the company said.<a class="cite" href="/sources#2" aria-label="Source 2">2</a>
+  <p>
+    Ofwat's own position, in the same report, is that "it is not sufficient for companies to justify their dividend payments on the basis of meeting holding company obligations, and without also considering performance of the regulatory company to support that dividend decision."<a class="cite" href="/sources#8" aria-label="Source 8">8</a> The regulator has since strengthened the dividend-policy licence condition.
   </p>
 
-  <h2>Who approved this</h2>
+  <h2>Who approved the rise</h2>
 
   <p>
     Ofwat approved the increases as part of the PR24 Final Determination in December 2024, which sets price controls for every water company in England and Wales for 2025-2030<a class="cite" href="/sources#3" aria-label="Source 3">3</a>.
@@ -113,18 +126,30 @@ const waterStandingDelta = pct(R25.water_supply_standing_gbp, R26.water_supply_s
     Household customers cannot appeal Ofwat's decision directly. Ofwat does not handle individual bill complaints. There is no retail market: you cannot switch supplier.
   </p>
 
-  <h2>On dividends</h2>
+  <h2>Why 8 per cent and 28 per cent both appear</h2>
 
   <p>
-    Southern Water states that it has paid no dividends to external shareholders since 2017, and that Macquarie-managed funds have injected more than £1.6 billion of equity into the group since 2021<a class="cite" href="/sources#7" aria-label="Source 7">7</a>. Both of those claims check out. Ofwat's own Monitoring Financial Resilience Report for 2022-23 records a £1.1 billion equity injection in September 2021, of which £530 million reached the regulated entity, and a further £550 million in October 2023, of which £375 million reached the regulated entity<a class="cite" href="/sources#8" aria-label="Source 8">8</a>.
+    Southern Water says the average combined household bill for 2026-27 is going up by {H.combined_average_rise_pct} per cent<a class="cite" href="/sources#2" aria-label="Source 2">2</a>. That is an average across three types of customer:
+  </p>
+
+  <ul>
+    <li>Combined water and wastewater: about {sign(H.combined_average_rise_pct)}, or {fmt(H.combined_average_monthly_rise_gbp)} a month<a class="cite" href="/sources#2" aria-label="Source 2">2</a></li>
+    <li>Water supply only: {sign(H.water_supply_only_rise_pct)}, or {fmt(H.water_supply_only_monthly_rise_gbp)} a month<a class="cite" href="/sources#2" aria-label="Source 2">2</a></li>
+    <li>Wastewater only: {sign(H.wastewater_only_rise_pct)}, a saving of about {fmt(H.wastewater_only_monthly_saving_gbp)} a month<a class="cite" href="/sources#2" aria-label="Source 2">2</a></li>
+  </ul>
+
+  <p>
+    Whether the bill in front of you shows a rise of 8 per cent or nearer 28 per cent for this year alone depends on which services you get, how much water you use, and whether the billing period crosses 1 April. The two-year compound is a separate question from the averaging, and the compound is always higher than the headline.
+  </p>
+
+  <h2>On dividends at sector level</h2>
+
+  <p>
+    Southern Water states that it has paid no dividends to external shareholders since 2017<a class="cite" href="/sources#7" aria-label="Source 7">7</a>. That checks out. The dividend question is more visible at sector level.
   </p>
 
   <p>
-    At sector level, things look different. Ofwat's most recent financial monitoring reports show total water-company borrowings of £{sector.sector.total_borrowing_31_march_2025_gbp_bn} billion at 31 March 2025<a class="cite" href="/sources#5" aria-label="Source 5">5</a>, up from net debt of £{sector.sector.net_debt_31_march_2024_gbp_bn} billion a year earlier<a class="cite" href="/sources#6" aria-label="Source 6">6</a>. The sector-wide dividend total for 2023-24 was about £{sector.sector.dividends_declared_2023_24_gbp_bn} billion<a class="cite" href="/sources#6" aria-label="Source 6">6</a>, with a new dividend-policy licence condition coming into force that year.
-  </p>
-
-  <p>
-    Southern Water specifically has been under dividend restrictions since 2017 and is receiving fresh equity. The sector as a whole still carries around £70 billion of debt, and until 2023-24 had few meaningful constraints on how dividends were linked to performance.
+    Ofwat's financial monitoring reports show total water-company borrowings of £{sector.sector.total_borrowing_31_march_2025_gbp_bn} billion at 31 March 2025<a class="cite" href="/sources#5" aria-label="Source 5">5</a>, up from net debt of £{sector.sector.net_debt_31_march_2024_gbp_bn} billion a year earlier<a class="cite" href="/sources#6" aria-label="Source 6">6</a>. The sector-wide dividend total for 2023-24 was about £{sector.sector.dividends_declared_2023_24_gbp_bn} billion<a class="cite" href="/sources#6" aria-label="Source 6">6</a>, with a new dividend-policy licence condition coming into force that year.
   </p>
 
   <h2>Lawful is not the same as fair</h2>

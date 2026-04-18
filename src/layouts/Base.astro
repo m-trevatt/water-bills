@@ -26,9 +26,6 @@ const nav = [
   { href: '/sources', label: 'Sources', match: '/sources' }
 ];
 
-const today = new Date().toLocaleDateString('en-GB', {
-  day: 'numeric', month: 'long', year: 'numeric'
-});
 ---
 
 <!doctype html>
@@ -36,7 +33,7 @@ const today = new Date().toLocaleDateString('en-GB', {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>{title} · Medway Water</title>
+  <title>{title} · Water bills</title>
   <meta name="description" content={description} />
   <meta name="color-scheme" content="light only" />
   <meta name="robots" content="index, follow" />
@@ -52,11 +49,6 @@ const today = new Date().toLocaleDateString('en-GB', {
   <a class="skip-link" href="#main">Skip to content</a>
   <header class="masthead">
     <div class="masthead-inner">
-      <div class="masthead-meta">
-        <span>Medway &middot; Kent</span>
-        <span>{today}</span>
-      </div>
-      <p class="masthead-title"><a href="/">Medway Water</a></p>
       <nav class="primary" aria-label="Primary">
         {nav.map(link => (
           <a href={link.href} aria-current={currentPath === link.match ? 'page' : undefined}>{link.label}</a>
