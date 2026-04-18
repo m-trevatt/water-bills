@@ -23,31 +23,15 @@
   --font-body: 'IBM Plex Sans Condensed', 'Helvetica Neue', Arial, sans-serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
 
-  --measure: 36rem;
+  --measure: 40rem;
+  --measure-wide: 48rem;
   --step--1: clamp(0.85rem, 0.80rem + 0.2vw, 0.95rem);
   --step-0: clamp(1rem, 0.95rem + 0.25vw, 1.1rem);
   --step-1: clamp(1.15rem, 1.05rem + 0.5vw, 1.35rem);
   --step-2: clamp(1.5rem, 1.3rem + 1vw, 2rem);
   --step-3: clamp(2rem, 1.6rem + 2vw, 3.2rem);
-  --step-4: clamp(2.75rem, 2rem + 3.5vw, 4.8rem);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --ink: #f1ebdf;
-    --ink-soft: #c2b8a8;
-    --ink-faint: #8e867a;
-    --paper: #1d1a16;
-    --paper-warm: #262320;
-    --paper-card: #2a2622;
-    --rule: #443d34;
-    --rule-hard: #f1ebdf;
-    --accent: #e06a5e;
-    --accent-ink: #f0867a;
-    --navy: #8ea6d0;
-    --flag: #c6a968;
-    --flag-bg: #352c15;
-  }
+  --step-4: clamp(2.3rem, 1.8rem + 2.2vw, 3.6rem);
+  --ink-link: #1b2b4a;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -98,7 +82,7 @@ body {
   line-height: 1.55;
   color: var(--ink);
   background: var(--paper);
-  font-variant-numeric: oldstyle-nums proportional-nums;
+  font-variant-numeric: tabular-nums;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   min-height: 100vh;
@@ -182,6 +166,7 @@ main {
   padding: 1.5rem 1.25rem 3rem;
   width: 100%;
 }
+.wide { max-width: var(--measure-wide); margin-left: auto; margin-right: auto; }
 
 /* ---- Typography ---- */
 
@@ -253,7 +238,7 @@ ul, ol { padding-left: 1.2rem; margin: 0 0 1rem; }
 li { margin-bottom: 0.35rem; }
 
 a {
-  color: var(--accent-ink);
+  color: var(--ink-link);
   text-decoration: underline;
   text-decoration-thickness: 1px;
   text-underline-offset: 0.15em;
@@ -394,7 +379,7 @@ button.btn, a.btn {
   gap: 0.4rem;
   transition: background 0.12s, color 0.12s;
 }
-button.btn:hover, a.btn:hover { background: var(--accent); border-color: var(--accent); color: var(--paper); }
+button.btn:hover, a.btn:hover { background: var(--ink-link); border-color: var(--ink-link); color: var(--paper); }
 button.btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
 button.btn.ghost, a.btn.ghost {
@@ -407,12 +392,14 @@ button.btn.ghost:hover, a.btn.ghost:hover {
 }
 
 button.btn.primary, a.btn.primary {
-  background: var(--accent);
-  border-color: var(--accent);
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--paper);
 }
 button.btn.primary:hover, a.btn.primary:hover {
-  background: var(--accent-ink);
-  border-color: var(--accent-ink);
+  background: var(--ink-link);
+  border-color: var(--ink-link);
+  color: var(--paper);
 }
 
 /* ---- Forms ---- */
@@ -562,7 +549,7 @@ fieldset {
   text-transform: uppercase;
   letter-spacing: 0.05em;
   font-weight: 600;
-  background: var(--navy);
+  background: var(--ink);
   color: var(--paper);
   margin-right: 0.4rem;
 }

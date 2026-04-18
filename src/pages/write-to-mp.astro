@@ -104,10 +104,9 @@ import Base from '../layouts/Base.astro';
     function showMPResult(mp) {
       pcResult.hidden = false;
       pcError.hidden = true;
-      const partyHex = mp.partyColour ? `#${mp.partyColour}` : null;
       pcResult.innerHTML = `
         <span class="mp-name">${escapeHtml(mp.fullTitle || mp.name)}</span>
-        <span class="party"${partyHex ? ` style="background:${partyHex}"` : ''}>${escapeHtml(mp.party || '')}</span>
+        <span class="party">${escapeHtml(mp.party || '')}</span>
         ${escapeHtml(mp.constituency || '')}<br>
         <small class="mp-email">${escapeHtml(mp.email || 'No parliamentary email on file')}</small>
       `;
