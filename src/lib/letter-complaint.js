@@ -50,7 +50,7 @@ export function generateComplaintLetter(input) {
     const c = parseFloat(currentBill);
     if (!isNaN(p) && !isNaN(c) && p > 0) {
       const delta = (((c - p) / p) * 100).toFixed(1);
-      impact = `The previous bill for this period was £${p.toFixed(2)}. The current bill is £${c.toFixed(2)}. That is an increase of ${delta} per cent.\n\n`;
+      impact = `The previous bill for this period was £${p.toFixed(2)}. The current bill is £${c.toFixed(2)}. That is an increase of ${delta}%.\n\n`;
     }
   }
 
@@ -87,7 +87,7 @@ Dear Southern Water,
 
 I am raising a stage 1 complaint about my 2026-27 bill.
 
-${impact}Your Household Charges Scheme 2026-27 sets the metered water supply rate at £${R26.water_supply_per_cubic_metre_gbp.toFixed(3)} per cubic metre, up from £${R25.water_supply_per_cubic_metre_gbp.toFixed(3)} the year before. That is a ${m3Delta} per cent rise in one year. The standing charge has gone up by ${standingDelta} per cent over the same period. Your own communications describe the average combined household rise as 8 per cent, but the actual rise on water supply alone is ${m3Delta} per cent per cubic metre.
+${impact}Your Household Charges Scheme 2026-27 sets the metered water supply rate at £${R26.water_supply_per_cubic_metre_gbp.toFixed(3)} per cubic metre, up from £${R25.water_supply_per_cubic_metre_gbp.toFixed(3)} the year before. That is a ${m3Delta}% rise in one year. The standing charge has gone up by ${standingDelta}% over the same period. Your own communications describe the average combined household rise as 8%, but the actual rise on water supply alone is ${m3Delta}% per cubic metre.
 
 I am not disputing that these rates are published. I am asking you to show that they have been applied correctly and to confirm it in writing.
 

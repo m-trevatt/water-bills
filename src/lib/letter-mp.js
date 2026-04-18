@@ -84,7 +84,7 @@ ${salutation},
 
 I am writing as a constituent in ${constituency} about the 2026 Southern Water price rise.
 
-The metered water supply rate has gone up by ${m3Delta} per cent per cubic metre in one year. The standing charge is up ${standingDelta} per cent. For households that get water supply only from Southern Water, the average rise is 25.8 per cent. This follows a 46.7 per cent average rise the previous year. All of these figures are from Southern Water's own published documents.
+The metered water supply rate has gone up by ${m3Delta}% per cubic metre in one year. The standing charge is up ${standingDelta}%. For households that get water supply only from Southern Water, the average rise is 25.8%. This follows a 46.7% average rise the previous year. All of these figures are from Southern Water's own published documents.
 
 ${impact}I am not asking you to say the rise is unlawful. Ofwat approved it in the PR24 Final Determination. Southern Water appealed, not because the determination was too high, but because they wanted more. The CMA issued its final redeterminations in March 2026. The legal process has run its course.
 
@@ -106,7 +106,7 @@ ${pc}
 ---
 Figures used in this letter:
 - 2026-27 metered rates: Southern Water Household Charges page
-- 46.7 per cent previous year rise: Southern Water customer bills announcement for 2026/27
+- 46.7% previous year rise: Southern Water customer bills announcement for 2026/27
 - £82.7bn / £69.5bn sector totals: Ofwat Monitoring Financial Resilience Reports 2024-25 and 2023-24
 - Macquarie equity: Southern Water dividend statement, cross-referenced with Ofwat MFR 2022-23
 Full sources: ${siteOrigin || ''}/sources
