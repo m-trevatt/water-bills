@@ -1,127 +1,184 @@
 ---
 import Base from '../layouts/Base.astro';
+import copySource from '../content/complain.md?raw';
+import { renderCopy } from '../lib/render-copy.js';
+import rates from '../data/rates.json';
+import { hasSupplierRates } from '../lib/letter-complaint.js';
+
+const segments = renderCopy(copySource, {});
+
+const formIdx = segments.findIndex(s => s.type === 'marker' && s.name === 'complaint-form');
+const gridEndIdx = segments.findIndex(s => s.type === 'marker' && s.name === 'delivery-actions');
+const preSegments = formIdx === -1 ? segments : segments.slice(0, formIdx);
+const rightSegments = formIdx === -1 ? [] : segments.slice(formIdx + 1, gridEndIdx === -1 ? segments.length : gridEndIdx + 1);
+const postSegments = gridEndIdx === -1 ? [] : segments.slice(gridEndIdx + 1);
+const hasForm = formIdx !== -1;
+
+const defaultSupplierKey = rates.default_supplier;
+const supplierList = Object.entries(rates.suppliers).map(([key, s]) => ({
+  key,
+  name: s.name,
+  ready: hasSupplierRates(key),
+  email: s.complaint_email,
+  addressLines: s.complaint_address_lines || []
+}));
+const defaultSupplier = supplierList.find(s => s.key === defaultSupplierKey) || supplierList[0];
+const catalogueJson = JSON.stringify(Object.fromEntries(supplierList.map(s => [s.key, s])));
 ---
 
-<Base title="Complain" currentPath="/complain" dek="Draft a formal complaint to Southern Water">
-  <h1 class="hed">
-    The first step is a complaint letter.
-    <span class="small">Ten working days is the response clock. If they miss it, or the reply does not address what you asked, you can escalate.</span>
-  </h1>
+<Base title="Complain" currentPath="/complain" dek="Draft a formal complaint to your water company">
+  {preSegments.map(seg => {
+    if (seg.type === 'html') return <Fragment set:html={seg.html} />;
+    if (seg.name === 'supplier-gate') return (
+      <div class="supplier-gate" id="supplier-gate" data-module="supplier-gate" data-suppliers={catalogueJson} data-default={defaultSupplierKey}>
+        <div class="q">Who is your supplier? Check the top of your bill.</div>
+        <div class="options" role="radiogroup" aria-label="Supplier">
+          {supplierList.map(s => (
+            <button type="button" data-supplier={s.key} aria-pressed={s.key === defaultSupplierKey ? 'true' : 'false'}>{s.name}</button>
+          ))}
+          <button type="button" data-supplier="other" aria-pressed="false">Something else</button>
+        </div>
+      </div>
+    );
+    if (seg.name === 'supplier-mismatch-flag') return (
+      <div id="supplier-mismatch" class="flag" hidden>
+        <strong id="mismatch-headline">We don't yet have verified rates for this supplier.</strong>
+        <span id="mismatch-body"> Until they're loaded, the figures in the letter will be placeholders. The <a href="/write-to-mp">letter to your MP</a> is supplier-agnostic and works for you either way.</span>
+      </div>
+    );
+    return null;
+  })}
 
-  <p class="lead">
-    Fill in what you have. The letter renders as you type. Nothing is sent until you send it. Nothing is stored.
-  </p>
+  {hasForm && (
+    <div class="complain-grid">
+      <div class="complain-grid-left">
+        <form class="builder" id="complaint-form" autocomplete="on">
+          <label for="fullName">Full name <span class="req" aria-hidden="true">*</span></label>
+          <input type="text" id="fullName" name="fullName" autocomplete="name" required aria-required="true" />
 
-  <div class="supplier-gate" id="supplier-gate" data-module="supplier-gate">
-    <div class="q">Who is your supplier? Check the top of your bill.</div>
-    <div class="options" role="radiogroup" aria-label="Supplier">
-      <button type="button" data-supplier="southern" aria-pressed="true">Southern Water</button>
-      <button type="button" data-supplier="southeast" aria-pressed="false">South East Water</button>
-      <button type="button" data-supplier="other" aria-pressed="false">Something else</button>
+          <label for="address">Address <span class="req" aria-hidden="true">*</span></label>
+          <input type="text" id="address" name="address" autocomplete="street-address" placeholder="Number, street, town" required aria-required="true" />
+
+          <label for="postcode">Postcode <span class="req" aria-hidden="true">*</span></label>
+          <input type="text" id="postcode" name="postcode" autocomplete="postal-code" placeholder="ME7 2ST" required aria-required="true" />
+
+          <label for="accountNumber">Account number <span class="hint-inline">(optional)</span></label>
+          <input type="text" id="accountNumber" name="accountNumber" placeholder="Leave blank if unsure" />
+
+          <h2>The bill</h2>
+          <div class="row-2">
+            <div>
+              <label for="billPeriodFrom">Period from</label>
+              <input type="date" id="billPeriodFrom" name="billPeriodFrom" />
+            </div>
+            <div>
+              <label for="billPeriodTo">Period to</label>
+              <input type="date" id="billPeriodTo" name="billPeriodTo" />
+            </div>
+          </div>
+
+          <div class="row-2">
+            <div>
+              <label for="previousBill">Previous bill &pound; (optional)</label>
+              <input type="number" id="previousBill" name="previousBill" step="0.01" min="0" />
+            </div>
+            <div>
+              <label for="currentBill">Current bill &pound; (optional)</label>
+              <input type="number" id="currentBill" name="currentBill" step="0.01" min="0" />
+            </div>
+          </div>
+
+          <h2>What you are asking for</h2>
+          <fieldset class="checks">
+            <label><input type="checkbox" name="breakdown" checked /> An itemised breakdown of the bill, showing meter readings and how the period is split across the rate change</label>
+            <label><input type="checkbox" name="scheme_match" checked /> Written confirmation that the rates applied match the published 2026-27 charges scheme</label>
+            <label><input type="checkbox" name="meter_test" /> A meter accuracy test, at your cost if the meter is within tolerance</label>
+            <label><input type="checkbox" name="social_tariff" /> Apply your social tariff discount to my account if I qualify</label>
+          </fieldset>
+        </form>
+      </div>
+      <div class="complain-grid-right">
+        {rightSegments.map(seg => {
+          if (seg.type === 'html') return <Fragment set:html={seg.html} />;
+          if (seg.name === 'letter-preview') return (
+            <div class="preview-wrap">
+              <pre class="preview" id="preview" aria-live="polite">Fill in the form. The letter will draft itself as you type.</pre>
+            </div>
+          );
+          if (seg.name === 'delivery-actions') return (
+            <>
+              <div class="actions">
+                <button type="button" class="btn primary" id="copy-btn">Copy to clipboard</button>
+                <button type="button" class="btn ghost" id="download-btn">Download as .txt</button>
+                <button type="button" class="btn ghost" id="mailto-btn">Open in email app</button>
+              </div>
+              <p class="status" id="status" aria-live="polite"></p>
+            </>
+          );
+          return null;
+        })}
+      </div>
     </div>
-    <p class="note">
-      In Kent, wastewater is always Southern Water. Water supply can be Southern Water, South East Water, or another provider depending on where you live. If you are not sure, the canonical check is the <a href="https://www.water.org.uk/customers/find-your-supplier" rel="noopener noreferrer">Water UK postcode finder</a>.
-    </p>
-  </div>
+  )}
 
-  <div id="supplier-mismatch" class="flag" hidden>
-    <strong>This complaint letter is written for Southern Water.</strong> If your supplier is different, the figures on the letter will be wrong. Use your own supplier's published charges scheme and adjust. The <a href="/write-to-mp">letter to your MP</a> is supplier-agnostic and works for you either way.
-  </div>
-
-  <form class="builder" id="complaint-form" autocomplete="on">
-    <h2>Who you are</h2>
-    <label for="fullName">Full name <span class="req" aria-hidden="true">*</span></label>
-    <input type="text" id="fullName" name="fullName" autocomplete="name" required aria-required="true" />
-
-    <label for="address">Address <span class="req" aria-hidden="true">*</span></label>
-    <input type="text" id="address" name="address" autocomplete="street-address" placeholder="Number, street, town" required aria-required="true" />
-
-    <label for="postcode">Postcode <span class="req" aria-hidden="true">*</span></label>
-    <input type="text" id="postcode" name="postcode" autocomplete="postal-code" placeholder="ME7 2ST" required aria-required="true" />
-
-    <label for="accountNumber">Account number <span class="hint-inline">(optional)</span></label>
-    <input type="text" id="accountNumber" name="accountNumber" placeholder="Leave blank if unsure" />
-
-    <h2>The bill</h2>
-    <div class="row-2">
-      <div>
-        <label for="billPeriodFrom">Period from</label>
-        <input type="date" id="billPeriodFrom" name="billPeriodFrom" />
-      </div>
-      <div>
-        <label for="billPeriodTo">Period to</label>
-        <input type="date" id="billPeriodTo" name="billPeriodTo" />
-      </div>
-    </div>
-
-    <div class="row-2">
-      <div>
-        <label for="previousBill">Previous bill &pound; (optional)</label>
-        <input type="number" id="previousBill" name="previousBill" step="0.01" min="0" />
-      </div>
-      <div>
-        <label for="currentBill">Current bill &pound; (optional)</label>
-        <input type="number" id="currentBill" name="currentBill" step="0.01" min="0" />
-      </div>
-    </div>
-
-    <h2>What you are asking for</h2>
-    <fieldset class="checks">
-      <label><input type="checkbox" name="breakdown" checked /> An itemised breakdown of the bill, showing meter readings and how the period is split across the rate change</label>
-      <label><input type="checkbox" name="scheme_match" checked /> Written confirmation that the rates applied match the published 2026-27 charges scheme</label>
-      <label><input type="checkbox" name="meter_test" /> A meter test for accuracy</label>
-      <label><input type="checkbox" name="social_tariff" /> A written statement of my social tariff and hardship fund eligibility</label>
-    </fieldset>
-  </form>
-
-  <h2>The letter</h2>
-
-  <div class="preview-wrap">
-    <pre class="preview" id="preview" aria-live="polite">Fill in the form above. The letter will draft itself as you type.</pre>
-  </div>
-
-  <div class="actions">
-    <button type="button" class="btn primary" id="copy-btn">Copy to clipboard</button>
-    <button type="button" class="btn ghost" id="download-btn">Download as .txt</button>
-    <button type="button" class="btn ghost" id="mailto-btn">Open in email app</button>
-  </div>
-
-  <p class="status" id="status" aria-live="polite"></p>
-
-  <div class="flag" id="mailto-warn" hidden>
-    Your letter is long. Some email apps, Outlook especially, will truncate the body when opened from a link. If the draft looks cut off, use <strong>Copy to clipboard</strong> and paste into a new email instead.
-  </div>
-
-  <h2>Sending</h2>
-  <p>
-    Email to <a href="mailto:customerservices@southernwater.co.uk">customerservices@southernwater.co.uk</a>, or post to PO Box 41, Worthing BN13 3NZ.
-  </p>
-  <p>
-    Keep a copy. The clock is 10 working days. If there is no reply, or the reply does not cover what you asked, escalate to the <a href="https://www.ccw.org.uk" rel="noopener noreferrer">Consumer Council for Water</a>.
-  </p>
+  {postSegments.map(seg => {
+    if (seg.type === 'html') return <Fragment set:html={seg.html} />;
+    if (seg.name === 'sending-details') return (
+      <p id="sending-details">
+        Email to <a id="sending-email" href={`mailto:${defaultSupplier.email}`}>{defaultSupplier.email}</a>, or post to <span id="sending-address">{defaultSupplier.addressLines.join(', ')}</span>.
+      </p>
+    );
+    return null;
+  })}
 
   <script>
     import { generateComplaintLetter } from '../lib/letter-complaint.js';
-    import { copyToClipboard, downloadAsText, openMailto, MAILTO_BODY_SAFE_LIMIT } from '../lib/delivery.js';
+    import { copyToClipboard, downloadAsText, openMailto } from '../lib/delivery.js';
 
     const form = document.getElementById('complaint-form');
     const preview = document.getElementById('preview');
     const status = document.getElementById('status');
-    const mailtoWarn = document.getElementById('mailto-warn');
     const mismatch = document.getElementById('supplier-mismatch');
+    const mismatchHeadline = document.getElementById('mismatch-headline');
+    const mismatchBody = document.getElementById('mismatch-body');
     const gate = document.getElementById('supplier-gate');
+    const sendingEmail = document.getElementById('sending-email');
+    const sendingAddress = document.getElementById('sending-address');
 
-    let supplier = 'southern';
+    const catalogue = JSON.parse(gate.dataset.suppliers || '{}');
+    let supplierKey = gate.dataset.default || Object.keys(catalogue)[0];
 
-    // Supplier gate
+    function applySupplier(key) {
+      supplierKey = key;
+      gate.querySelectorAll('button[data-supplier]').forEach(b =>
+        b.setAttribute('aria-pressed', b.getAttribute('data-supplier') === key ? 'true' : 'false')
+      );
+
+      const entry = catalogue[key];
+
+      if (key === 'other') {
+        mismatch.hidden = false;
+        mismatchHeadline.textContent = 'This complaint letter needs a supplier we support.';
+        mismatchBody.innerHTML = ' If you\'re with a different company, the Water UK postcode finder can tell you who they are. The <a href="/write-to-mp">letter to your MP</a> is supplier-agnostic and works for you either way.';
+      } else if (!entry || !entry.ready) {
+        mismatch.hidden = false;
+        mismatchHeadline.textContent = `We don't yet have verified rates loaded for ${entry ? entry.name : 'this supplier'}.`;
+        mismatchBody.innerHTML = ' Until they\'re added, the letter can\'t generate accurate figures. The <a href="/write-to-mp">letter to your MP</a> is supplier-agnostic and works for you either way.';
+      } else {
+        mismatch.hidden = true;
+      }
+
+      if (entry && sendingEmail && sendingAddress) {
+        sendingEmail.textContent = entry.email;
+        sendingEmail.setAttribute('href', `mailto:${entry.email}`);
+        sendingAddress.textContent = (entry.addressLines || []).join(', ');
+      }
+
+      render();
+    }
+
     gate.querySelectorAll('button[data-supplier]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        gate.querySelectorAll('button[data-supplier]').forEach(b =>
-          b.setAttribute('aria-pressed', b === btn ? 'true' : 'false')
-        );
-        supplier = btn.getAttribute('data-supplier');
-        mismatch.hidden = (supplier === 'southern');
-      });
+      btn.addEventListener('click', () => applySupplier(btn.getAttribute('data-supplier')));
     });
 
     function read() {
@@ -131,6 +188,7 @@ import Base from '../layouts/Base.astro';
         concerns[k] = form.querySelector(`[name="${k}"]`)?.checked ?? false;
       });
       return {
+        supplierKey,
         fullName: (data.get('fullName') || '').toString(),
         address: (data.get('address') || '').toString(),
         postcode: (data.get('postcode') || '').toString(),
@@ -146,12 +204,10 @@ import Base from '../layouts/Base.astro';
     function render() {
       const letter = generateComplaintLetter(read());
       preview.textContent = letter;
-      mailtoWarn.hidden = letter.length <= MAILTO_BODY_SAFE_LIMIT;
     }
 
-    let userTouched = false;
-    form.addEventListener('input', () => { userTouched = true; render(); });
-    form.addEventListener('change', () => { userTouched = true; render(); });
+    form.addEventListener('input', render);
+    form.addEventListener('change', render);
 
     function setStatus(msg) {
       status.textContent = msg;
@@ -165,16 +221,21 @@ import Base from '../layouts/Base.astro';
 
     document.getElementById('download-btn').addEventListener('click', () => {
       const stamp = new Date().toISOString().slice(0, 10);
-      downloadAsText(preview.textContent, `southern-water-complaint-${stamp}.txt`);
+      const slug = supplierKey || 'water';
+      downloadAsText(preview.textContent, `${slug}-complaint-${stamp}.txt`);
       setStatus('Downloaded.');
     });
 
     document.getElementById('mailto-btn').addEventListener('click', () => {
+      const entry = catalogue[supplierKey];
+      if (!entry || !entry.email) return;
       openMailto({
-        to: 'customerservices@southernwater.co.uk',
+        to: entry.email,
         subject: 'Formal complaint, stage 1, household account',
         body: preview.textContent
       });
     });
+
+    applySupplier(supplierKey);
   </script>
 </Base>

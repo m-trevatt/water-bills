@@ -272,14 +272,11 @@ a:hover { color: var(--accent); }
   font-variant-numeric: tabular-nums;
 }
 .rates-table thead th {
-  font-family: var(--font-display);
   font-weight: 600;
   text-align: left;
   padding: 0.45rem 0.3rem;
   border-bottom: 1px solid var(--rule-hard);
-  font-size: 0.8rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  font-size: 0.85rem;
   color: var(--ink-soft);
 }
 .rates-table th.num, .rates-table td.num {
@@ -296,6 +293,17 @@ a:hover { color: var(--accent); }
   color: var(--accent);
 }
 .rates-table td.delta-down { color: var(--ink-soft); font-weight: 500; }
+.rates-table tfoot td {
+  padding: 0.55rem 0.3rem;
+  border-top: 2px solid var(--ink);
+  font-weight: 600;
+  vertical-align: top;
+}
+.rates-table tfoot tr + tr td { border-top: 1px solid var(--rule); }
+.rates-table tfoot tr.grand-total td {
+  border-top: 2px solid var(--ink);
+  font-size: 1.05em;
+}
 
 /* ---- Pull quote / callout ---- */
 
@@ -478,9 +486,33 @@ fieldset {
   font-size: 0.82rem;
   line-height: 1.55;
   color: var(--ink);
-  max-height: 60vh;
-  overflow: auto;
   margin: 0;
+}
+
+.complain-grid {
+  display: block;
+}
+.complain-grid > * { min-width: 0; }
+
+@media (min-width: 900px) {
+  .complain-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 2rem;
+    align-items: start;
+  }
+  .complain-grid-right {
+    position: sticky;
+    top: 1rem;
+  }
+  .complain-grid-right h2:first-child { margin-top: 0; }
+}
+
+p.supplier-note {
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  line-height: 1.45;
+  margin: 0.5rem 0 0.5rem;
 }
 
 /* ---- Postcode block ---- */

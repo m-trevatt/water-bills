@@ -1,8 +1,9 @@
 import rates from '../data/rates.json';
 import sector from '../data/sector.json';
 
-const R25 = rates.years['2025-26'];
-const R26 = rates.years['2026-27'];
+const southern = rates.suppliers.southern;
+const R25 = southern.years['2025-26'];
+const R26 = southern.years['2026-27'];
 const m3Delta = (((R26.water_supply_per_cubic_metre_gbp - R25.water_supply_per_cubic_metre_gbp) / R25.water_supply_per_cubic_metre_gbp) * 100).toFixed(1);
 const standingDelta = (((R26.water_supply_standing_gbp - R25.water_supply_standing_gbp) / R25.water_supply_standing_gbp) * 100).toFixed(1);
 
@@ -10,8 +11,8 @@ const ASKS = {
   catchup: `ensure catch-up investment in the water sector is funded by shareholders and bondholders, not by customers who cannot switch supplier`,
   transparency: `press Ofwat for clearer public reporting on internal dividend flows between regulated water companies and their parent holding structures`,
   protection: `press Ofwat and DEFRA on what consumer protection mechanisms will apply during the 2025-2030 investment period if service performance does not improve in line with the extra funding`,
-  reform: `support reform of the water regulatory framework so that household customers have meaningful recourse, given that there is no retail market`,
-  meeting: `let me know when your next constituency surgery is, or arrange a conversation, so I can explain the local impact in more detail`
+  reform: `support all reform of the water regulatory framework so that household customers have meaningful recourse, given that there is no retail market`,
+  meeting: `let me know when you will next be holding a local drop-in so I can meet you in person and explain the local impact in more detail`
 };
 
 function formalName(mp) {
@@ -26,8 +27,8 @@ export function generateMPLetter(input) {
     fullName = '',
     postcode = '',
     mp = null,
-    previousMonthlyBill = '',
-    currentMonthlyBill = '',
+    previousBill = '',
+    currentBill = '',
     personalContext = '',
     asks = {},
     siteOrigin = ''
@@ -46,13 +47,13 @@ export function generateMPLetter(input) {
   const constituency = mp ? mp.constituency : '[your constituency]';
 
   let impact = '';
-  if (previousMonthlyBill && currentMonthlyBill) {
-    const p = parseFloat(previousMonthlyBill);
-    const c = parseFloat(currentMonthlyBill);
+  if (previousBill && currentBill) {
+    const p = parseFloat(previousBill);
+    const c = parseFloat(currentBill);
     if (!isNaN(p) && !isNaN(c) && p > 0) {
-      const monthly = (c - p).toFixed(2);
-      const annual = ((c - p) * 12).toFixed(2);
-      impact = `My own monthly water bill has gone from £${p.toFixed(2)} to £${c.toFixed(2)}. That is £${monthly} a month, £${annual} a year.\n\n`;
+      const delta = (c - p).toFixed(2);
+      const pctRise = (((c - p) / p) * 100).toFixed(1);
+      impact = `My own water bill has gone from £${p.toFixed(2)} to £${c.toFixed(2)}, a rise of £${delta} or ${pctRise}%.\n\n`;
     }
   }
 

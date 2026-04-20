@@ -1,98 +1,106 @@
 ---
 import Base from '../layouts/Base.astro';
+import copySource from '../content/write-to-mp.md?raw';
+import { renderCopy } from '../lib/render-copy.js';
+
+const segments = renderCopy(copySource, {});
+
+const formIdx = segments.findIndex(s => s.type === 'marker' && s.name === 'mp-form');
+const gridEndIdx = segments.findIndex(s => s.type === 'marker' && s.name === 'delivery-actions');
+const preSegments = formIdx === -1 ? segments : segments.slice(0, formIdx);
+const rightSegments = formIdx === -1 ? [] : segments.slice(formIdx + 1, gridEndIdx === -1 ? segments.length : gridEndIdx + 1);
+const postSegments = gridEndIdx === -1 ? [] : segments.slice(gridEndIdx + 1);
+const hasForm = formIdx !== -1;
 ---
 
 <Base title="Your MP" currentPath="/write-to-mp" dek="Send a letter about the sector, not just your bill">
-  <h1 class="hed">
-    Your MP is where the bigger question goes.
-    <span class="small">The complaint goes to Southern Water. The policy question goes to Parliament. Your MP is the channel.</span>
-  </h1>
-
-  <p class="lead">
-    Enter your postcode to pull your current MP and their parliamentary email straight from Parliament's own data. Nothing is saved here. If your MP changes, this site reflects it the next time someone loads it.
-  </p>
-
-  <div class="postcode-lookup">
-    <label for="pc-input">Your postcode</label>
-    <div class="row">
-      <input type="text" id="pc-input" placeholder="ME7 2ST" autocomplete="postal-code" spellcheck="false" aria-describedby="pc-error" />
-      <button type="button" class="btn" id="pc-btn">Find my MP</button>
-    </div>
-    <div class="result" id="pc-result" aria-live="polite" hidden></div>
-    <p class="error" id="pc-error" role="alert" hidden></p>
-  </div>
-
-  <form class="builder" id="mp-form" autocomplete="on" novalidate>
-    <h2>You</h2>
-    <label for="fullName">Full name</label>
-    <input type="text" id="fullName" name="fullName" autocomplete="name" />
-
-    <h2>The personal bit, optional but it helps</h2>
-    <p class="hint">
-      MPs triage constituent mail by what looks like a template versus what looks like a person. One or two sentences of your own makes a real difference.
-    </p>
-
-    <div class="row-2">
-      <div>
-        <label for="previousMonthlyBill">Previous monthly bill &pound;</label>
-        <input type="number" id="previousMonthlyBill" name="previousMonthlyBill" step="0.01" min="0" />
+  {preSegments.map(seg => {
+    if (seg.type === 'html') return <Fragment set:html={seg.html} />;
+    if (seg.name === 'postcode-lookup') return (
+      <div class="postcode-lookup">
+        <label for="pc-input">Your postcode</label>
+        <div class="row">
+          <input type="text" id="pc-input" placeholder="ME7 2ST" autocomplete="postal-code" spellcheck="false" aria-describedby="pc-error" />
+          <button type="button" class="btn" id="pc-btn">Find my MP</button>
+        </div>
+        <div class="result" id="pc-result" aria-live="polite" hidden></div>
+        <p class="error" id="pc-error" role="alert" hidden></p>
       </div>
-      <div>
-        <label for="currentMonthlyBill">Current monthly bill &pound;</label>
-        <input type="number" id="currentMonthlyBill" name="currentMonthlyBill" step="0.01" min="0" />
+    );
+    return null;
+  })}
+
+  {hasForm && (
+    <div class="complain-grid">
+      <div class="complain-grid-left">
+        <form class="builder" id="mp-form" autocomplete="on" novalidate>
+          <h2>You</h2>
+          <label for="fullName">Full name</label>
+          <input type="text" id="fullName" name="fullName" autocomplete="name" />
+
+          <div class="row-2">
+            <div>
+              <label for="previousBill">Previous bill &pound;</label>
+              <input type="number" id="previousBill" name="previousBill" step="0.01" min="0" />
+            </div>
+            <div>
+              <label for="currentBill">Current bill &pound;</label>
+              <input type="number" id="currentBill" name="currentBill" step="0.01" min="0" />
+            </div>
+          </div>
+
+          <label for="personalContext">A line or two on how this affects you</label>
+          <textarea id="personalContext" name="personalContext" maxlength="500" placeholder="E.g. I have three children and a fixed income. The rise on water supply alone adds about £72 a year to a budget that was already stretched."></textarea>
+
+          <h2>What you want them to do</h2>
+          <fieldset class="checks">
+            <label><input type="checkbox" name="catchup" checked /> Make shareholders and lenders, not customers who cannot switch, pay for the catch-up investment in pipes and sewage works</label>
+            <label><input type="checkbox" name="transparency" /> Push Ofwat to publish clearer figures on the money that moves between water companies and their parent owners</label>
+            <label><input type="checkbox" name="protection" checked /> Ask Ofwat and DEFRA what will happen to bills if service does not improve in line with the extra money</label>
+            <label><input type="checkbox" name="reform" /> Support all reform that gives customers a real way to push back, since we cannot change supplier</label>
+            <label><input type="checkbox" name="meeting" /> Tell you when they'll next be holding a local drop-in so you can meet them in person</label>
+          </fieldset>
+        </form>
+      </div>
+      <div class="complain-grid-right">
+        {rightSegments.map(seg => {
+          if (seg.type === 'html') return <Fragment set:html={seg.html} />;
+          if (seg.name === 'letter-preview') return (
+            <div class="preview-wrap">
+              <pre class="preview" id="preview" aria-live="polite"></pre>
+            </div>
+          );
+          if (seg.name === 'delivery-actions') return (
+            <>
+              <p class="mailto-hint" id="mailto-hint">Find your MP first to enable "Open in email app".</p>
+              <div class="actions">
+                <button type="button" class="btn primary" id="copy-btn">Copy to clipboard</button>
+                <button type="button" class="btn ghost" id="download-btn">Download as .txt</button>
+                <button type="button" class="btn ghost" id="mailto-btn" disabled aria-describedby="mailto-hint">Open in email app</button>
+              </div>
+              <p class="status" id="status" aria-live="polite"></p>
+            </>
+          );
+          return null;
+        })}
       </div>
     </div>
+  )}
 
-    <label for="personalContext">A line or two on how this affects you</label>
-    <textarea id="personalContext" name="personalContext" maxlength="500" placeholder="E.g. I have three children and a fixed income. The rise on water supply alone adds about £72 a year to a budget that was already stretched."></textarea>
-
-    <h2>What you want them to do</h2>
-    <fieldset class="checks">
-      <label><input type="checkbox" name="catchup" checked /> Make shareholders and lenders &mdash; not customers who cannot switch &mdash; pay for the catch-up investment in pipes and sewage works</label>
-      <label><input type="checkbox" name="transparency" /> Push Ofwat to publish clearer figures on the money that moves between water companies and their parent owners</label>
-      <label><input type="checkbox" name="protection" checked /> Ask Ofwat and DEFRA what will happen to bills if service does not improve in line with the extra money</label>
-      <label><input type="checkbox" name="reform" /> Support reform that gives customers a real way to push back, since we cannot change supplier</label>
-      <label><input type="checkbox" name="meeting" /> Let you know when their next constituency surgery is</label>
-    </fieldset>
-  </form>
-
-  <h2>The letter</h2>
-
-  <div class="preview-wrap">
-    <pre class="preview" id="preview" aria-live="polite"></pre>
-  </div>
-
-  <p class="mailto-hint" id="mailto-hint">Find your MP first to enable "Open in email app".</p>
-  <div class="actions">
-    <button type="button" class="btn primary" id="copy-btn">Copy to clipboard</button>
-    <button type="button" class="btn ghost" id="download-btn">Download as .txt</button>
-    <button type="button" class="btn ghost" id="mailto-btn" disabled aria-describedby="mailto-hint">Open in email app</button>
-  </div>
-
-  <p class="status" id="status" aria-live="polite"></p>
-
-  <div class="flag" id="mailto-warn" hidden>
-    Your letter is long. Some email apps, Outlook especially, will truncate the body when opened from a link. If the draft looks cut off, use <strong>Copy to clipboard</strong> and paste into a new email instead.
-  </div>
-
-  <h2>A few things worth knowing</h2>
-  <p>
-    MPs only act for their own constituents. That is why the postcode lookup matters: it tells your MP that you are one of theirs.
-  </p>
-  <p>
-    A real letter from one constituent sits on the pile. A hundred letters on the same subject moves it to the top of the pile. This page is not a petition platform and does not count signatures, but if you share it with neighbours, the collective effect is the same.
-  </p>
+  {postSegments.map(seg => {
+    if (seg.type === 'html') return <Fragment set:html={seg.html} />;
+    return null;
+  })}
 
   <script>
     import { generateMPLetter } from '../lib/letter-mp.js';
     import { lookupMPFromPostcode } from '../lib/mp-lookup.js';
-    import { copyToClipboard, downloadAsText, openMailto, MAILTO_BODY_SAFE_LIMIT } from '../lib/delivery.js';
+    import { copyToClipboard, downloadAsText, openMailto } from '../lib/delivery.js';
 
     const form = document.getElementById('mp-form');
     const preview = document.getElementById('preview');
     const status = document.getElementById('status');
     const mailtoBtn = document.getElementById('mailto-btn');
-    const mailtoWarn = document.getElementById('mailto-warn');
 
     const pcInput = document.getElementById('pc-input');
     const pcBtn = document.getElementById('pc-btn');
@@ -160,8 +168,8 @@ import Base from '../layouts/Base.astro';
         fullName: (data.get('fullName') || '').toString(),
         postcode: currentMP && currentMP.place ? currentMP.place.postcode : pcInput.value.trim(),
         mp: currentMP,
-        previousMonthlyBill: (data.get('previousMonthlyBill') || '').toString(),
-        currentMonthlyBill: (data.get('currentMonthlyBill') || '').toString(),
+        previousBill: (data.get('previousBill') || '').toString(),
+        currentBill: (data.get('currentBill') || '').toString(),
         personalContext: (data.get('personalContext') || '').toString(),
         asks,
         siteOrigin: typeof window !== 'undefined' ? window.location.origin : ''
@@ -176,7 +184,6 @@ import Base from '../layouts/Base.astro';
       mailtoBtn.disabled = !hasMp;
       mailtoBtn.title = hasMp ? `Send to ${currentMP.name}` : 'Find your MP first';
       if (mailtoHint) mailtoHint.hidden = hasMp;
-      mailtoWarn.hidden = letter.length <= MAILTO_BODY_SAFE_LIMIT;
     }
 
     form.addEventListener('input', render);

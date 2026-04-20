@@ -41,8 +41,16 @@ function renderBlock(block) {
     const text = lines.map(l => l.replace(/^>\s?/, '')).join(' ');
     return `<p class="callout">${inline(escapeHtmlExceptCites(text))}</p>`;
   }
-  const text = lines.join(' ');
-  return `<p>${inline(escapeHtmlExceptCites(text))}</p>`;
+  let cls = '';
+  let bodyLines = lines;
+  const last = lines[lines.length - 1];
+  const m = last && last.match(/^\{\.([a-z0-9-]+)\}$/);
+  if (m) {
+    cls = ` class="${m[1]}"`;
+    bodyLines = lines.slice(0, -1);
+  }
+  const text = bodyLines.join(' ');
+  return `<p${cls}>${inline(escapeHtmlExceptCites(text))}</p>`;
 }
 
 // Escape HTML everywhere except inside [^N] and [text](url) tokens, which

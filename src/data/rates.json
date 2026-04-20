@@ -1,53 +1,86 @@
 {
   "_meta": {
-    "source": "sw-charges-26-27",
     "fetched": "2026-04-18",
     "next_refresh_due": "2027-03-01",
-    "note": "Rates change annually on 1 April. Southern Water publishes the new scheme the preceding winter. Update both years and increment next_refresh_due when the 27-28 scheme is published."
+    "note": "Rates change annually on 1 April. Each supplier publishes its new scheme the preceding winter. Add new suppliers by copying the Southern Water shape; leave fields null until the scheme is published and verified."
   },
-  "supplier": "Southern Water",
-  "covers": "Metered household properties",
-  "years": {
-    "2024-25": {
-      "period_label": "1 April 2024 to 31 March 2025",
-      "water_supply_standing_gbp": 23.96,
-      "water_supply_per_cubic_metre_gbp": 1.958,
-      "wastewater_standing_gbp": 27.76,
-      "wastewater_per_cubic_metre_gbp": 2.461,
-      "surface_water_drainage_gbp": 25.98,
-      "highway_drainage_gbp": 12.99
+  "default_supplier": "southern",
+  "suppliers": {
+    "southern": {
+      "name": "Southern Water",
+      "covers": "Metered household properties across Kent, Sussex, Hampshire and the Isle of Wight",
+      "complaint_email": "customerservices@southernwater.co.uk",
+      "complaint_address_lines": [
+        "Southern Water",
+        "Customer Services",
+        "PO Box 41",
+        "Worthing BN13 3NZ"
+      ],
+      "source_key": "sw-charges-26-27",
+      "years": {
+        "2024-25": {
+          "period_label": "1 April 2024 to 31 March 2025",
+          "water_supply_standing_gbp": 23.96,
+          "water_supply_per_cubic_metre_gbp": 1.958,
+          "wastewater_standing_gbp": 27.76,
+          "wastewater_per_cubic_metre_gbp": 2.461,
+          "surface_water_drainage_gbp": 25.98,
+          "highway_drainage_gbp": 12.99
+        },
+        "2025-26": {
+          "period_label": "1 April 2025 to 31 March 2026",
+          "water_supply_standing_gbp": 38.06,
+          "water_supply_per_cubic_metre_gbp": 2.753,
+          "wastewater_standing_gbp": 43.48,
+          "wastewater_per_cubic_metre_gbp": 3.794,
+          "surface_water_drainage_gbp": 40.88,
+          "highway_drainage_gbp": 20.44
+        },
+        "2026-27": {
+          "period_label": "1 April 2026 to 31 March 2027",
+          "water_supply_standing_gbp": 46.70,
+          "water_supply_per_cubic_metre_gbp": 3.518,
+          "wastewater_standing_gbp": 49.27,
+          "wastewater_per_cubic_metre_gbp": 3.545,
+          "surface_water_drainage_gbp": 50.00,
+          "highway_drainage_gbp": 19.16
+        }
+      },
+      "company_headlines_26_27": {
+        "combined_average_rise_pct": 8.0,
+        "combined_average_monthly_rise_gbp": 4.67,
+        "water_supply_only_rise_pct": 25.8,
+        "water_supply_only_monthly_rise_gbp": 6.06,
+        "wastewater_only_rise_pct": -4.0,
+        "wastewater_only_monthly_saving_gbp": 1.39,
+        "source": "sw-bills-announcement-26-27"
+      },
+      "previous_year_context": {
+        "combined_average_rise_pct": 46.7,
+        "note": "Southern Water describes this as coming after a decade of static charges to front-load investment plans.",
+        "source": "sw-bills-announcement-26-27"
+      }
     },
-    "2025-26": {
-      "period_label": "1 April 2025 to 31 March 2026",
-      "water_supply_standing_gbp": 38.06,
-      "water_supply_per_cubic_metre_gbp": 2.753,
-      "wastewater_standing_gbp": 43.48,
-      "wastewater_per_cubic_metre_gbp": 3.794,
-      "surface_water_drainage_gbp": 40.88,
-      "highway_drainage_gbp": 20.44
-    },
-    "2026-27": {
-      "period_label": "1 April 2026 to 31 March 2027",
-      "water_supply_standing_gbp": 46.70,
-      "water_supply_per_cubic_metre_gbp": 3.518,
-      "wastewater_standing_gbp": 49.27,
-      "wastewater_per_cubic_metre_gbp": 3.545,
-      "surface_water_drainage_gbp": 50.00,
-      "highway_drainage_gbp": 19.16
+    "southeast": {
+      "name": "South East Water",
+      "covers": "Water supply only (not wastewater) across parts of Kent, Sussex, Surrey, Hampshire and Berkshire",
+      "complaint_email": "customerservices@southeastwater.co.uk",
+      "complaint_address_lines": [
+        "South East Water",
+        "Customer Services",
+        "Rocfort Road",
+        "Snodland",
+        "Kent ME6 5AH"
+      ],
+      "source_key": null,
+      "years": {
+        "2024-25": null,
+        "2025-26": null,
+        "2026-27": null
+      },
+      "company_headlines_26_27": null,
+      "previous_year_context": null,
+      "_todo": "Populate years from South East Water's 2026-27 Charges Scheme before shipping. Keep null until verified against the source PDF."
     }
-  },
-  "company_headlines_26_27": {
-    "combined_average_rise_pct": 8.0,
-    "combined_average_monthly_rise_gbp": 4.67,
-    "water_supply_only_rise_pct": 25.8,
-    "water_supply_only_monthly_rise_gbp": 6.06,
-    "wastewater_only_rise_pct": -4.0,
-    "wastewater_only_monthly_saving_gbp": 1.39,
-    "source": "sw-bills-announcement-26-27"
-  },
-  "previous_year_context": {
-    "combined_average_rise_pct": 46.7,
-    "note": "Southern Water describes this as coming after a decade of static charges to front-load investment plans.",
-    "source": "sw-bills-announcement-26-27"
   }
 }

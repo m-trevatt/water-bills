@@ -4,11 +4,12 @@ import rates from '../data/rates.json';
 import copySource from '../content/overview.md?raw';
 import { renderCopy } from '../lib/render-copy.js';
 
-const R24 = rates.years['2024-25'];
-const R25 = rates.years['2025-26'];
-const R26 = rates.years['2026-27'];
-const H = rates.company_headlines_26_27;
-const prev = rates.previous_year_context;
+const southern = rates.suppliers.southern;
+const R24 = southern.years['2024-25'];
+const R25 = southern.years['2025-26'];
+const R26 = southern.years['2026-27'];
+const H = southern.company_headlines_26_27;
+const prev = southern.previous_year_context;
 
 const pct = (a, b) => (((b - a) / a) * 100).toFixed(1);
 const fmt = (n, d = 2) => '£' + n.toFixed(d);
@@ -21,6 +22,7 @@ const rows = [
   { label: 'Wastewater, annual standing charge', a0: R24.wastewater_standing_gbp, a: R25.wastewater_standing_gbp, b: R26.wastewater_standing_gbp, dp: 2 },
   { label: 'Surface water drainage, annual', a0: R24.surface_water_drainage_gbp, a: R25.surface_water_drainage_gbp, b: R26.surface_water_drainage_gbp, dp: 2 }
 ];
+
 
 const combinedCompoundPct = (((1 + prev.combined_average_rise_pct / 100) * (1 + H.combined_average_rise_pct / 100)) - 1) * 100;
 const waterOnlyCompoundPct = (((1 + prev.combined_average_rise_pct / 100) * (1 + H.water_supply_only_rise_pct / 100)) - 1) * 100;
@@ -75,6 +77,35 @@ const segments = renderCopy(copySource, vars);
               );
             })}
           </tbody>
+          <tfoot>
+            {(() => {
+              const volRows = rows.filter(r => r.dp === 3);
+              const fixRows = rows.filter(r => r.dp === 2);
+              const sum = (arr, k) => arr.reduce((t, r) => t + r[k], 0);
+              const volTotals = { a0: sum(volRows, 'a0'), a: sum(volRows, 'a'), b: sum(volRows, 'b') };
+              const fixTotals = { a0: sum(fixRows, 'a0'), a: sum(fixRows, 'a'), b: sum(fixRows, 'b') };
+              const dVol = pct(volTotals.a0, volTotals.b);
+              const dFix = pct(fixTotals.a0, fixTotals.b);
+              return (
+                <>
+                  <tr>
+                    <td>Total per cubic metre</td>
+                    <td class="num">{fmt(volTotals.a0, 3)}</td>
+                    <td class="num">{fmt(volTotals.a, 3)}</td>
+                    <td class="num">{fmt(volTotals.b, 3)}</td>
+                    <td class="num delta">{sign(dVol)}</td>
+                  </tr>
+                  <tr>
+                    <td>Total annual fixed charges</td>
+                    <td class="num">{fmt(fixTotals.a0, 2)}</td>
+                    <td class="num">{fmt(fixTotals.a, 2)}</td>
+                    <td class="num">{fmt(fixTotals.b, 2)}</td>
+                    <td class="num delta">{sign(dFix)}</td>
+                  </tr>
+                </>
+              );
+            })()}
+          </tfoot>
         </table>
       );
     }
@@ -83,21 +114,13 @@ const segments = renderCopy(copySource, vars);
         <aside class="action-panel" aria-label="What you can do">
           <p class="action-panel-lede"><strong>Take action now.</strong></p>
           <div class="actions">
-            <a class="btn primary" href="/complain">Draft a complaint to Southern Water</a>
-            <a class="btn ghost" href="/write-to-mp">Write to your MP</a>
+            <a class="btn primary" href="/write-to-mp">Write to your MP</a>
+            <a class="btn ghost" href="/complain">Write to your water company</a>
           </div>
           <p class="action-panel-note">
             If you're struggling to pay, Southern Water's social tariff gives at least a 45% discount for eligible households.<a class="cite" href="/sources#12" aria-label="Source 12">12</a>
           </p>
         </aside>
-      );
-    }
-    if (seg.name === 'cta-buttons') {
-      return (
-        <div class="actions">
-          <a class="btn primary" href="/complain">Draft a complaint to Southern Water</a>
-          <a class="btn ghost" href="/write-to-mp">Write to your MP</a>
-        </div>
       );
     }
     if (seg.name === 'closing-flag') {
