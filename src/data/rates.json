@@ -8,6 +8,15 @@
   "supplier": "Southern Water",
   "covers": "Metered household properties",
   "years": {
+    "2024-25": {
+      "period_label": "1 April 2024 to 31 March 2025",
+      "water_supply_standing_gbp": 23.96,
+      "water_supply_per_cubic_metre_gbp": 1.958,
+      "wastewater_standing_gbp": 27.76,
+      "wastewater_per_cubic_metre_gbp": 2.461,
+      "surface_water_drainage_gbp": 25.98,
+      "highway_drainage_gbp": 12.99
+    },
     "2025-26": {
       "period_label": "1 April 2025 to 31 March 2026",
       "water_supply_standing_gbp": 38.06,

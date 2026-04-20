@@ -1,7 +1,10 @@
 ---
 import Base from '../layouts/Base.astro';
 import rates from '../data/rates.json';
+import copySource from '../content/overview.md?raw';
+import { renderCopy } from '../lib/render-copy.js';
 
+const R24 = rates.years['2024-25'];
 const R25 = rates.years['2025-26'];
 const R26 = rates.years['2026-27'];
 const H = rates.company_headlines_26_27;
@@ -12,164 +15,98 @@ const fmt = (n, d = 2) => '£' + n.toFixed(d);
 const sign = (n) => (parseFloat(n) > 0 ? '+' : '') + n + '%';
 
 const rows = [
-  { label: 'Water supply, per cubic metre', a: R25.water_supply_per_cubic_metre_gbp, b: R26.water_supply_per_cubic_metre_gbp, dp: 3 },
-  { label: 'Water supply, annual standing charge', a: R25.water_supply_standing_gbp, b: R26.water_supply_standing_gbp, dp: 2 },
-  { label: 'Wastewater, per cubic metre', a: R25.wastewater_per_cubic_metre_gbp, b: R26.wastewater_per_cubic_metre_gbp, dp: 3 },
-  { label: 'Wastewater, annual standing charge', a: R25.wastewater_standing_gbp, b: R26.wastewater_standing_gbp, dp: 2 },
-  { label: 'Surface water drainage, annual', a: R25.surface_water_drainage_gbp, b: R26.surface_water_drainage_gbp, dp: 2 }
+  { label: 'Water supply, per cubic metre', a0: R24.water_supply_per_cubic_metre_gbp, a: R25.water_supply_per_cubic_metre_gbp, b: R26.water_supply_per_cubic_metre_gbp, dp: 3 },
+  { label: 'Water supply, annual standing charge', a0: R24.water_supply_standing_gbp, a: R25.water_supply_standing_gbp, b: R26.water_supply_standing_gbp, dp: 2 },
+  { label: 'Wastewater, per cubic metre', a0: R24.wastewater_per_cubic_metre_gbp, a: R25.wastewater_per_cubic_metre_gbp, b: R26.wastewater_per_cubic_metre_gbp, dp: 3 },
+  { label: 'Wastewater, annual standing charge', a0: R24.wastewater_standing_gbp, a: R25.wastewater_standing_gbp, b: R26.wastewater_standing_gbp, dp: 2 },
+  { label: 'Surface water drainage, annual', a0: R24.surface_water_drainage_gbp, a: R25.surface_water_drainage_gbp, b: R26.surface_water_drainage_gbp, dp: 2 }
 ];
 
 const combinedCompoundPct = (((1 + prev.combined_average_rise_pct / 100) * (1 + H.combined_average_rise_pct / 100)) - 1) * 100;
 const waterOnlyCompoundPct = (((1 + prev.combined_average_rise_pct / 100) * (1 + H.water_supply_only_rise_pct / 100)) - 1) * 100;
-const compoundCombined = combinedCompoundPct.toFixed(0);
-const compoundWaterOnly = waterOnlyCompoundPct.toFixed(0);
+
+const baselineBill = 420;
+const compoundFactor = (1 + prev.combined_average_rise_pct/100) * (1 + H.combined_average_rise_pct/100);
+const currentBill = baselineBill * compoundFactor;
+
+const vars = {
+  compound_combined: combinedCompoundPct.toFixed(0),
+  compound_water_only: waterOnlyCompoundPct.toFixed(0),
+  prev_rise: prev.combined_average_rise_pct,
+  current_rise: H.combined_average_rise_pct,
+  baseline_bill: baselineBill.toFixed(0),
+  current_bill: currentBill.toFixed(0),
+  monthly_rise: ((currentBill - baselineBill) / 12).toFixed(0)
+};
+
+const segments = renderCopy(copySource, vars);
 ---
 
 <Base title="Overview" currentPath="/" dek="How Southern Water bills rose about 58% in two years, and how we got here">
-  <h1 class="hed">
-    Since April 2025, our water bills have gone up by roughly {compoundCombined}%. It's legal. Is it fair?
-    <span class="small">Southern Water's own headline for April 2026 is 8%. That is one year, averaged across three customer types. The whole story is bigger than that.</span>
-  </h1>
-
-  <aside class="action-panel" aria-label="What you can do">
-    <p class="action-panel-lede">
-      <strong>Take action now.</strong>
-    </p>
-    <div class="actions">
-      <a class="btn primary" href="/complain">Draft a complaint to Southern Water</a>
-      <a class="btn ghost" href="/write-to-mp">Write to your MP</a>
-    </div>
-    <p class="action-panel-note">
-      If you are struggling to pay, Southern Water's social tariff gives at least a 45% discount for eligible households.<a class="cite" href="/sources#12" aria-label="Source 12">12</a>
-    </p>
-  </aside>
-
-  <h2>What happened</h2>
-
-  <p>
-    In April 2025, the average combined household bill rose by {prev.combined_average_rise_pct}%<a class="cite" href="/sources#2" aria-label="Source 2">2</a>. In April 2026, a further {H.combined_average_rise_pct}% was added on top<a class="cite" href="/sources#2" aria-label="Source 2">2</a>. Rises compound. A bill that was £100 in March 2025 is about £{((1 + prev.combined_average_rise_pct/100) * (1 + H.combined_average_rise_pct/100) * 100).toFixed(0)} now.
-  </p>
-
-  <p>
-    For households that take only water supply from Southern Water, the two-year compound is nearer {compoundWaterOnly}%<a class="cite" href="/sources#2" aria-label="Source 2">2</a>.
-  </p>
-
-  <table class="rates-table">
-    <caption class="visually-hidden">Southern Water metered household rates, 2025-26 compared with 2026-27.</caption>
-    <thead>
-      <tr>
-        <th scope="col">Charge</th>
-        <th scope="col" class="num">2025-26</th>
-        <th scope="col" class="num">2026-27</th>
-        <th scope="col" class="num">Change</th>
-      </tr>
-    </thead>
-    <tbody>
-      {rows.map(r => {
-        const d = pct(r.a, r.b);
-        const up = parseFloat(d) > 0;
-        return (
-          <tr>
-            <td>{r.label}</td>
-            <td class="num">{fmt(r.a, r.dp)}</td>
-            <td class="num">{fmt(r.b, r.dp)}</td>
-            <td class={`num delta ${up ? '' : 'delta-down'}`}>{sign(d)}</td>
-          </tr>
-        );
-      })}
-    </tbody>
-  </table>
-
-  <h2>The decade before this</h2>
-
-  <p>
-    For roughly ten years, water bills were held broadly flat in real terms. During that same decade, Southern Water underinvested in its pipes and treatment works, misreported its performance to the regulator, and kept paying dividends to its owners.
-  </p>
-
-  <p>
-    In 2019, Ofwat — the body that regulates the industry — fined Southern Water £126 million for deliberately misreporting wastewater performance between 2010 and 2017<a class="cite" href="/sources#16" aria-label="Source 16">16</a>. Of that, £123 million was returned to customers as a rebate, spread across five years of bills from 2020 to 2025. The rebate was never shown as a separate line on anyone's bill. Most customers never knew it was there.
-  </p>
-
-  <p>
-    In 2021, Southern Water was fined a further £90 million in the Crown Court for 6,971 illegal sewage discharges between 2010 and 2015<a class="cite" href="/sources#17" aria-label="Source 17">17</a>. That was the largest criminal fine ever issued in the water sector.
-  </p>
-
-  <p class="callout">
-    The 2019 rebate ran out in 2025 at the same moment the new price rise began. The 46.7% jump hit a bill that was no longer being quietly held down.
-  </p>
-
-  <h2>Who owns Southern Water now</h2>
-
-  <p>
-    In 2021, majority ownership of the group moved to a consortium of investment funds managed by Macquarie Asset Management. Between 2021 and 2023, those funds injected £1.65 billion of new equity into the group.
-  </p>
-
-  <p>
-    Of that £1.65 billion, about £905 million reached the water company itself — the part that owns the pipes and holds the licence from the regulator. The remaining £745 million stayed at the holding companies that sit above the water company<a class="cite" href="/sources#8" aria-label="Source 8">8</a>. Ofwat's own reports do not itemise what the retained money was used for.
-  </p>
-
-  <p>
-    Southern Water has not paid dividends to external shareholders since 2017. In July 2023, a separate regulatory lock-up was triggered when a credit-rating agency downgraded the company. Under the terms of its licence, that downgrade blocks the water company from sending money upward to its holding companies for as long as the financial conditions remain unmet.
-  </p>
-
-  <h2>How the new price was set</h2>
-
-  <p>
-    Every five years, Ofwat sets the prices each water company is allowed to charge. In December 2024, it published its decision for 2025 to 2030<a class="cite" href="/sources#3" aria-label="Source 3">3</a>. For Southern Water, this meant an average household bill rising from £420 in 2024-25 to about £626 across the new period — an increase of roughly 48% in real terms, with most of it front-loaded into the first year.
-  </p>
-
-  <p>
-    Southern Water and four other companies rejected that decision. They argued it was too low, not too high. The appeal went to the Competition and Markets Authority, an independent body that handles disputes with the regulator. In March 2026 it ruled Southern Water's average bill could rise by a further £15 a year, taking it to about £641<a class="cite" href="/sources#4" aria-label="Source 4">4</a>. That is 2.5% on top of what Ofwat had already set. More than half of that extra came from raising the guaranteed return paid to investors, not from funding more investment.
-  </p>
-
-  <p>
-    Southern Water had asked for £710. Ofwat offered £620. The Competition and Markets Authority settled at £641.
-  </p>
-
-  <h2>You can't just leave</h2>
-
-  <p>
-    You cannot switch water supplier. There is no retail market for households. Southern Water is the legal monopoly for wastewater across Kent, and for water supply across large parts of it. Its ultimate owner is a group of private investment funds.
-  </p>
-
-  <h2>The regulator is about to change</h2>
-
-  <p>
-    In January 2026, the government published a White Paper proposing to abolish Ofwat and replace it with a single water regulator, combining the economic, environmental and drinking-water functions currently split between four bodies<a class="cite" href="/sources#4" aria-label="Source 4">4</a>. That reform will not change the price controls already in force for 2025 to 2030. It will shape whatever comes next.
-  </p>
-
-  <h2>All of this, at once</h2>
-
-  <p>
-    A decade of flat bills. Underinvestment. Misreporting. Illegal sewage discharges. Two regulatory fines. An ownership change. £1.65 billion injected, of which £745 million never reached the water company. A price control that allows a real-terms rise of roughly 48% over five years, with most of it in year one. An appeal that added another 2.5% on top. A rebate that quietly ran out the same month the rise began. And no option to take your custom elsewhere.
-  </p>
-
-  <p>
-    This is how a bill rises this much this fast.
-  </p>
-
-  <h2>What comes next</h2>
-
-  <p>
-    Ofwat's determination keeps Southern Water's bills roughly flat in real terms from 2026 to 2030, after the front-loaded first-year jump. Cash bills will still rise with inflation. The next price review is due in 2029 and will set prices for 2030 to 2035. By then the planned regulator overhaul will be in place. What shape those new rules take is a decision Parliament is about to make.
-  </p>
-
-  <h2>Legal is not fair</h2>
-
-  <p>
-    The rise is legal. Ofwat approved it. The Competition and Markets Authority upheld it. That makes it lawful. It does not make it fair. Fairness is not a question for a regulator. It is a question for Parliament, and therefore for the person you send to Parliament.
-  </p>
-
-  <p>
-    A complaint about your own bill goes to Southern Water. It might get you a breakdown, a social tariff, or a meter test. It will not change the rates. The structural question — about who should pay for a decade of misconduct and under-investment — goes to your MP.
-  </p>
-
-  <div class="actions">
-    <a class="btn primary" href="/complain">Draft a complaint to Southern Water</a>
-    <a class="btn ghost" href="/write-to-mp">Write to your MP</a>
-  </div>
-
-  <div class="flag">
-    <strong>This site is not a campaign and is not party affiliated.</strong> It was built by a local who doesn't think this is fair. It does not offer legal advice.
-  </div>
+  {segments.map(seg => {
+    if (seg.type === 'html') {
+      return <Fragment set:html={seg.html} />;
+    }
+    if (seg.name === 'rates-table') {
+      return (
+        <table class="rates-table">
+          <caption class="visually-hidden">Southern Water metered household rates, 2024-25 through 2026-27.</caption>
+          <thead>
+            <tr>
+              <th scope="col">Charge</th>
+              <th scope="col" class="num">2024-25</th>
+              <th scope="col" class="num">2025-26</th>
+              <th scope="col" class="num">2026-27</th>
+              <th scope="col" class="num">2-yr change</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map(r => {
+              const d = pct(r.a0, r.b);
+              const up = parseFloat(d) > 0;
+              return (
+                <tr>
+                  <td>{r.label}</td>
+                  <td class="num">{fmt(r.a0, r.dp)}</td>
+                  <td class="num">{fmt(r.a, r.dp)}</td>
+                  <td class="num">{fmt(r.b, r.dp)}</td>
+                  <td class={`num delta ${up ? '' : 'delta-down'}`}>{sign(d)}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      );
+    }
+    if (seg.name === 'action-panel') {
+      return (
+        <aside class="action-panel" aria-label="What you can do">
+          <p class="action-panel-lede"><strong>Take action now.</strong></p>
+          <div class="actions">
+            <a class="btn primary" href="/complain">Draft a complaint to Southern Water</a>
+            <a class="btn ghost" href="/write-to-mp">Write to your MP</a>
+          </div>
+          <p class="action-panel-note">
+            If you are struggling to pay, Southern Water's social tariff gives at least a 45% discount for eligible households.<a class="cite" href="/sources#12" aria-label="Source 12">12</a>
+          </p>
+        </aside>
+      );
+    }
+    if (seg.name === 'cta-buttons') {
+      return (
+        <div class="actions">
+          <a class="btn primary" href="/complain">Draft a complaint to Southern Water</a>
+          <a class="btn ghost" href="/write-to-mp">Write to your MP</a>
+        </div>
+      );
+    }
+    if (seg.name === 'closing-flag') {
+      return (
+        <div class="flag">
+          <strong>This site is not a campaign and is not party affiliated.</strong> It was built by a local who doesn't think this is fair. It does not offer legal advice.
+        </div>
+      );
+    }
+    return null;
+  })}
 </Base>
