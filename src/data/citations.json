@@ -129,6 +129,24 @@
     "supports": "Official postcode-based lookup of water supplier. Used as the fallback for users whose bill is not to hand.",
     "type": "primary"
   },
+  "ofwat-2019-penalty": {
+    "id": 16,
+    "title": "Ofwat proposes largest ever financial penalties totalling \u00a3126m for Southern Water",
+    "publisher": "Ofwat",
+    "url": "https://www.ofwat.gov.uk/pn-25-19-ofwat-proposes-largest-ever-financial-penalties-totalling-126m-for-southern-water/",
+    "accessed": "2026-04-20",
+    "supports": "The 2019 enforcement case: \u00a33m penalty plus \u00a3123m returned to customers for deliberate misreporting of wastewater performance 2010-2017.",
+    "type": "primary"
+  },
+  "ea-2021-prosecution": {
+    "id": 17,
+    "title": "Record \u00a390 million fine for Southern Water following Environment Agency prosecution",
+    "publisher": "Environment Agency, GOV.UK",
+    "url": "https://www.gov.uk/government/news/record-90-million-fine-for-southern-water-following-ea-prosecution",
+    "accessed": "2026-04-20",
+    "supports": "2021 Crown Court fine of \u00a390m for 6,971 illegal sewage discharges between 2010 and 2015.",
+    "type": "primary"
+  },
   "boycott-water-bills": {
     "id": 15,
     "title": "Boycott Water Bills",
