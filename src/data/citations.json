@@ -147,6 +147,15 @@
     "supports": "2021 Crown Court fine of \u00a390m for 6,971 illegal sewage discharges between 2010 and 2015.",
     "type": "primary"
   },
+  "defra-water-white-paper-2026": {
+    "id": 18,
+    "title": "A new vision for water (White Paper)",
+    "publisher": "Department for Environment, Food & Rural Affairs, GOV.UK",
+    "url": "https://www.gov.uk/government/publications/a-new-vision-for-water-white-paper/a-new-vision-for-water",
+    "accessed": "2026-04-20",
+    "supports": "The government's stated intention to abolish Ofwat and bring water system functions currently split between Ofwat, the DWI, EA and Natural England into a single new regulator. Published 19 February 2026.",
+    "type": "primary"
+  },
   "boycott-water-bills": {
     "id": 15,
     "title": "Boycott Water Bills",

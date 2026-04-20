@@ -20,7 +20,7 @@ From 2015 to 2025 water bills were held broadly flat.
 
 Southern Water underinvested in its pipes and treatment works, misreported its performance to the regulator, and kept paying dividends to its owners. In 2019, Ofwat, the body that regulates the industry, fined Southern Water £126 million for deliberately misreporting wastewater performance between 2010 and 2017[^16].
 
-Of that, £123 million was returned to customers as a rebate, spread across five years of bills from 2020 to 2025. The rebate was "baked-in" - not shown as a separate line on anyone's bill.
+Of that, £123 million was returned to customers as a rebate over the five years of bills from 2020 to 2025[^16]. The rebate was "baked-in", not shown as a separate line on anyone's bill.
 
 In 2021, Southern Water was fined a further £90 million in the Crown Court for 6,971 illegal sewage discharges between 2010 and 2015[^17]. The largest criminal fine ever issued in the water sector.
 
@@ -36,7 +36,7 @@ Southern Water hasn't paid its owners a dividend since 2017[^7]. Under the terms
 
 Ofwat sets the price cap for each water company every five years. Its decision for 2025 to 2030 was published in December 2024[^3].
 
-Southern Water and four other companies rejected it, arguing the cap was too low. Their appeal went to the Competition and Markets Authority, an independent body that handles disputes with the regulator. In March 2026 it settled on a higher cap than Ofwat had allowed[^4]. More than half of the uplift came from raising the guaranteed return paid to investors, not from funding more investment.
+Southern Water and four other companies rejected it, arguing the cap was too low. Their appeal went to the Competition and Markets Authority, an independent body that handles disputes with the regulator. In March 2026 it settled on a higher cap than Ofwat had allowed[^4].
 
 > Illustrative example: Southern Water asked for an average household bill of £710. Ofwat offered £620. The Competition and Markets Authority settled at £641. These are company-wide averages in 2022-23 prices, not individual bills.
 
@@ -61,7 +61,7 @@ Who should pay for a decade of misconduct and under-investment?
 
 ## The regulator will change
 
-The government has said it intends to abolish Ofwat and replace it with a single water regulator. That reform will not change the price controls already in force for 2025 to 2030.
+In February 2026 the government published the water White Paper, *A new vision for water*, setting out its intention to abolish Ofwat and bring the water functions currently split between Ofwat, the Environment Agency, Natural England and the Drinking Water Inspectorate into a single new regulator[^18]. That reform will not change the price controls already in force for 2025 to 2030.
 
 ## What comes next
 
