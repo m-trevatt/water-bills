@@ -19,6 +19,9 @@ const auditDate = new Date(citations._meta.last_audit).toLocaleDateString('en-GB
   day: 'numeric', month: 'long', year: 'numeric'
 });
 
+const siteUrl = 'https://legalnotfair.co.uk';
+const canonical = new URL(Astro.url.pathname, siteUrl).href;
+
 const nav = [
   { href: '/', label: 'Overview', match: '/' },
   { href: '/complain', label: 'Complain', match: '/complain' },
@@ -37,10 +40,13 @@ const nav = [
   <meta name="description" content={description} />
   <meta name="color-scheme" content="light only" />
   <meta name="robots" content="index, follow" />
+  <link rel="canonical" href={canonical} />
   <meta property="og:title" content={title} />
   <meta property="og:description" content={description} />
   <meta property="og:type" content="website" />
   <meta property="og:locale" content="en_GB" />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:site_name" content="legalnotfair.co.uk" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
