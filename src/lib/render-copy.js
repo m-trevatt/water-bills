@@ -41,6 +41,10 @@ function renderBlock(block) {
     const text = lines.map(l => l.replace(/^>\s?/, '')).join(' ');
     return `<p class="callout">${inline(escapeHtmlExceptCites(text))}</p>`;
   }
+  if (lines.every(l => l.startsWith('- '))) {
+    const items = lines.map(l => `<li>${inline(escapeHtmlExceptCites(l.slice(2)))}</li>`).join('');
+    return `<ul>${items}</ul>`;
+  }
   let cls = '';
   let bodyLines = lines;
   const last = lines[lines.length - 1];

@@ -51,7 +51,7 @@ This is why the price hike feels so high, because it is.
 
 ## Legal is not fair
 
-The rise is legal. Ofwat approved it. The Competition and Markets Authority upheld it. That makes it lawful. But it does not make it fair.
+Ofwat approved it and the Competition and Markets Authority upheld it, so the rise is legal. But is it fair?
 
 You cannot switch water supplier. There is no retail market for households. Southern Water is the legal monopoly for wastewater across Kent, and for water supply across large parts of it. Its ultimate owner is a group of private investment funds.
 
